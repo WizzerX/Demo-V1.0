@@ -7,7 +7,7 @@
 #include "Components/SphereComponent.h"
 #include  "Demo/Charcter/MainCharacter.h"
 #include "Components/WidgetComponent.h"
-
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AInteractable::AInteractable()

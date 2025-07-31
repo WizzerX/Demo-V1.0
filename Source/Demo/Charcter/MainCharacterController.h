@@ -13,5 +13,12 @@ UCLASS()
 class DEMO_API AMainCharacterController : public APlayerController
 {
 	GENERATED_BODY()
+
+
+protected:
+	
+
+public:
+	AMainCharacterController();
 	
 };

@@ -95,8 +95,10 @@ protected:
 public:	
 
 	FORCEINLINE  UWidgetComponent* GetWidgetComponent() { return WidgetComponent; }
-
-
+	FORCEINLINE UStaticMeshComponent* GetMesh() { return BoxMesh; }
+	FORCEINLINE USceneComponent* GetScene() { return SceneRoot; }
+	FORCEINLINE USphereComponent* GetSphere() { return SphereComponent; }
+	FORCEINLINE UBoxComponent* GetBox() { return BoxComponent; }
 public :
 	class AMainCharacter* CharacterRef;
 

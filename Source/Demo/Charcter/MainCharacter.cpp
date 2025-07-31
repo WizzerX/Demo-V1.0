@@ -13,6 +13,8 @@
 #include "Demo/Item/Interactable.h"
 #include "Components/WidgetComponent.h"
 #include <Kismet/GameplayStatics.h>
+#include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
 
 AMainCharacter::AMainCharacter()
 {
@@ -115,7 +117,7 @@ void AMainCharacter::Fire()
 {
 	FVector StartLoc = camera->GetComponentLocation();
 	FVector ForwardLoc = camera->GetForwardVector();
-	FVector EndLoc = StartLoc + ForwardLoc *150;
+	FVector EndLoc = StartLoc + ForwardLoc *800;
 
 	FHitResult HitResult;
 
@@ -134,17 +136,17 @@ void AMainCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (bInteractable) {
 		CurrentTraceItem();
-		if (CurrentWidget != PreviousWidget && PreviousWidget)
+		if (CurrentItem != PreviousItem && PreviousItem)
 		{
 
-			PreviousWidget->SetVisibility(false);
+			PreviousItem->GetWidgetComponent()->SetVisibility(false);
 
-			if (CurrentWidget) {
-				CurrentWidget->SetVisibility(true);
+			if (CurrentItem) {
+				PreviousItem->GetWidgetComponent()->SetVisibility(true);
 			}
 
 		}
-		PreviousWidget = CurrentWidget;
+		PreviousItem = CurrentItem;
 	}
 	
 	
@@ -181,7 +183,7 @@ void AMainCharacter::CurrentTraceItem()
 {
 	FVector StartLoc = camera->GetComponentLocation();
 	FVector ForwardLoc = camera->GetForwardVector();
-	FVector EndLoc = StartLoc + ForwardLoc * 100;
+	FVector EndLoc = StartLoc + ForwardLoc * 250;
 
 	FHitResult HitResult;
 	UE_LOG(LogTemp, Warning, TEXT("RayCastProblem"));
@@ -203,13 +205,15 @@ void AMainCharacter::CurrentTraceItem()
 		
 		if (HitResult.bBlockingHit && Item)
 		{
-			CurrentWidget = Item->GetWidgetComponent();
-			CurrentWidget->SetVisibility(true);
+			CurrentItem = Item;
+			CurrentItem->GetWidgetComponent()->SetVisibility(true);
+				
+			
 			
 
 		}
 		else {
-			CurrentWidget = nullptr;
+			CurrentItem = nullptr;
 		}
 		
 		
@@ -229,9 +233,17 @@ void AMainCharacter::Equip()
 
 void  AMainCharacter::Pickup()
 {
-	bAttach = true;
+	if (!CurrentItem)return;
 
+	AttachPoint->SetupAttachment(CurrentItem->GetMesh());
+	// Optional: disable collision and physics
+	CurrentItem->GetBox()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	CurrentItem->GetSphere()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	CurrentItem->GetMesh()->SetSimulatePhysics(false);
 
+	// Hide the widget
+	CurrentItem->GetWidgetComponent()->SetVisibility(false);
+	
 
 	
 }

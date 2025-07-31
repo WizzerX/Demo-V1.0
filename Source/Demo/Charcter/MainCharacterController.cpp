@@ -1,5 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Charcter/MainCharacterController.h"
+#include "../../Demo/Charcter/MainCharacterController.h"
+
+
+AMainCharacterController::AMainCharacterController()
+{
+
+
+}
 

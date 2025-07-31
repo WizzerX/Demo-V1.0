@@ -76,7 +76,9 @@ public:
 
 public:
 	bool bCrouch = false;
-	class  UWidgetComponent* PreviousWidget;
-	 class UWidgetComponent* CurrentWidget;
+	class  AInteractable* PreviousItem;
+	 class AInteractable* CurrentItem;
 	 bool bInteractable=false;
+
+	
 };
