@@ -1,0 +1,53 @@
+# ------------------------
+# Core UE4 Folders to Ignore
+# ------------------------
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+.vscode/
+.vs/
+.vaultcache/
+.vaultsettings.json
+
+# Build folders (optional)
+Build/Android/
+Build/IOS/
+
+# Auto-generated project files
+*.sln
+*.opensdf
+*.sdf
+*.suo
+*.VC.db
+*.VC.opendb
+*.xcodeproj
+*.xcworkspace
+*.xcuserstate
+*.vcxproj*
+*.user
+*.csproj
+*.pidb
+
+# Rider / CLion / JetBrains
+.idea/
+.cmake/
+
+# Logs, crash dumps, backups
+*.log
+*.dmp
+*.tmp
+*.bak
+
+# OS junk
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Plugins temp folders
+Plugins/*/Intermediate/
+Plugins/*/Saved/
+
+# Optional: Ignore all config backups
+Config/*.ini~
