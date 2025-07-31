@@ -26,6 +26,20 @@ public:
 
 
 };
+UENUM(BlueprintType)
+enum class EItemState :uint8
+{
+	EIS_Pickup UMETA(DisplayName = "Pickup"),
+	EIS_EquipInterping UMETA(DisplayName = "EquipInterping"),
+	EIS_PickedUp UMETA(DisplayName = "PickedUp"),
+	EIS_Equipped UMETA(DisplayName = "Equipped"),
+	EIS_Falling UMETA(DisplayName = "Falling"),
+
+	EIS_MAX UMETA(DisplayName = "DefaultMAX")
+
+
+
+};
 
 
 
@@ -91,7 +105,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	class UWidgetComponent* WidgetComponent;
 
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	EItemState ItemState;
 public:	
 
 	FORCEINLINE  UWidgetComponent* GetWidgetComponent() { return WidgetComponent; }

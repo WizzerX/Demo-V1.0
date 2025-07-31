@@ -130,6 +130,26 @@ void AMainCharacter::Fire()
 
 }
 
+void AMainCharacter::Drop()
+{
+
+	if (!CurrentItem)return;
+
+	
+	UE_LOG(LogTemp, Warning, TEXT("Drop THE ITEM"));
+
+	CurrentItem->GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	CurrentItem->GetMesh()->SetSimulatePhysics(true);
+	CurrentItem->GetWidgetComponent()->SetVisibility(false);
+	CurrentItem->GetBox()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	CurrentItem->GetSphere()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	CurrentItem = nullptr;
+	PreviousItem = nullptr;
+	
+
+
+}
+
 
 void AMainCharacter::Tick(float DeltaTime)
 {
@@ -176,7 +196,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Pickup);
 	
-
+	PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &AMainCharacter::Drop);
 
 }
 void AMainCharacter::CurrentTraceItem()
@@ -186,7 +206,7 @@ void AMainCharacter::CurrentTraceItem()
 	FVector EndLoc = StartLoc + ForwardLoc * 250;
 
 	FHitResult HitResult;
-	UE_LOG(LogTemp, Warning, TEXT("RayCastProblem"));
+	//UE_LOG(LogTemp, Warning, TEXT("RayCastProblem"));
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
 	
@@ -235,10 +255,11 @@ void  AMainCharacter::Pickup()
 {
 	if (!CurrentItem)return;
 
-	AttachPoint->SetupAttachment(CurrentItem->GetMesh());
+	CurrentItem->GetMesh()->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
 	// Optional: disable collision and physics
-	CurrentItem->GetBox()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-	CurrentItem->GetSphere()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	CurrentItem->GetBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	CurrentItem->GetSphere()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	CurrentItem->GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	CurrentItem->GetMesh()->SetSimulatePhysics(false);
 
 	// Hide the widget
