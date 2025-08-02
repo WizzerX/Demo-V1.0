@@ -68,7 +68,7 @@ protected:
 		class USphereComponent* SphereComponent;
 
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadwrite, Category = "collision", meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadwrite, Category = "collision", meta = (AllowPrivateAccess = true))
 		class UStaticMeshComponent* BoxMesh;
 
 		UFUNCTION()
@@ -97,8 +97,6 @@ protected:
 		virtual void Tick(float deltatime) override;
 
 
-		UPROPERTY(VisibleAnywhere)
-		USceneComponent* SceneRoot;
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Data")
 	FItemData ItemData;
@@ -112,7 +110,7 @@ public:
 
 	FORCEINLINE  UWidgetComponent* GetWidgetComponent() { return WidgetComponent; }
 	FORCEINLINE UStaticMeshComponent* GetMesh() { return BoxMesh; }
-	FORCEINLINE USceneComponent* GetScene() { return SceneRoot; }
+	FORCEINLINE USceneComponent* GetRoot() { return SceneRoot; }
 	FORCEINLINE USphereComponent* GetSphere() { return SphereComponent; }
 	FORCEINLINE UBoxComponent* GetBox() { return BoxComponent; }
 	FORCEINLINE EItemState GetItemState()const { return ItemState; }
@@ -123,5 +121,6 @@ public :
 
 private:
 	void SetItemProperties(EItemState State);
-	
+	UPROPERTY(EditAnywhere);
+	USceneComponent* SceneRoot;
 };

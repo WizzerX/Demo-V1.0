@@ -137,12 +137,15 @@ void AMainCharacter::DropItem()
 
 	
 	UE_LOG(LogTemp, Warning, TEXT("Drop THE ITEM"));
+	
 
 	CurrentItem->GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-	CurrentItem->GetMesh()->SetSimulatePhysics(true);
-	CurrentItem->GetWidgetComponent()->SetVisibility(false);
-	CurrentItem->GetBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	CurrentItem->GetSphere()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	
+
+	
+
+	CurrentItem->SetItemState(EItemState::EIS_Falling);
+
 
 	CurrentItem = nullptr;
 	PreviousItem = nullptr;
@@ -159,13 +162,12 @@ void AMainCharacter::Tick(float DeltaTime)
 		CurrentTraceItem();
 		if (CurrentItem != PreviousItem && PreviousItem)
 		{
-
 			PreviousItem->GetWidgetComponent()->SetVisibility(false);
 
-			if (CurrentItem) {
-				PreviousItem->GetWidgetComponent()->SetVisibility(true);
-			}
+			if(CurrentItem)
+			CurrentItem->GetWidgetComponent()->SetVisibility(true);
 
+			
 		}
 		PreviousItem = CurrentItem;
 	}
@@ -234,7 +236,9 @@ void AMainCharacter::CurrentTraceItem()
 
 		}
 		else {
+			
 			CurrentItem = nullptr;
+			
 		}
 		
 		

@@ -12,28 +12,31 @@
 // Sets default values
 AInteractable::AInteractable()
 {
-	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRoot"));
-	SetRootComponent(SceneRoot);
+	
+	
+	
+
+
+	BoxMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	SetRootComponent(BoxMesh);
+
 
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
+	BoxComponent->SetupAttachment(BoxMesh);
 	
-	BoxMesh=CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
+	SphereComponent->SetupAttachment(GetRootComponent());
+	
 
-	BoxMesh->AttachTo(GetRootComponent());
-	BoxComponent->SetupAttachment(SceneRoot);
-	SphereComponent->SetupAttachment(SceneRoot);
-
-	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComponent"));
-	WidgetComponent->SetupAttachment(GetRootComponent());
-	SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-	BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-	BoxComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, 
-		ECollisionResponse::ECR_Block);
+	
+	
+	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
 	WidgetComponent->SetVisibility(false);
-	WidgetComponent->SetHiddenInGame(false);
+	WidgetComponent->SetupAttachment(GetRootComponent());
+	
 
+	ItemState = EItemState::EIS_Pickup;
+	
 	
 
 }
@@ -105,7 +108,7 @@ void AInteractable::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComp, AAct
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Player END Dectaced Overlap!"));
 
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Sphere End Overlap!"));
-
+		
 	}
 
 
@@ -136,14 +139,16 @@ void AInteractable::SetItemProperties(EItemState State)
 	switch (State) 
 	{
 	case EItemState::EIS_Pickup:
+		WidgetComponent->SetVisibility(false);
 		BoxMesh->SetVisibility(true);
 		BoxMesh->SetSimulatePhysics(false);
 		BoxMesh->SetEnableGravity(false);
 		BoxMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		BoxMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-		SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		
 
 		BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		BoxComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility,
@@ -162,6 +167,7 @@ void AInteractable::SetItemProperties(EItemState State)
 		BoxMesh->SetSimulatePhysics(false);
 		BoxMesh->SetEnableGravity(false);
 		BoxMesh->SetVisibility(true);
+		WidgetComponent->SetVisibility(false);
 		break;
 	case EItemState::EIS_PickedUp:
 		BoxMesh->SetVisibility(false);
@@ -176,6 +182,7 @@ void AInteractable::SetItemProperties(EItemState State)
 
 		BoxMesh->SetSimulatePhysics(false);
 		BoxMesh->SetEnableGravity(false);
+		
 		break;
 	case EItemState::EIS_Equipped:
 		BoxMesh->SetVisibility(true);
@@ -190,12 +197,14 @@ void AInteractable::SetItemProperties(EItemState State)
 
 		BoxMesh->SetSimulatePhysics(false);
 		BoxMesh->SetEnableGravity(false);
+		WidgetComponent->SetVisibility(false);
+		
 		break;
 	case EItemState::EIS_Falling:
 		BoxMesh->SetVisibility(true);
 		BoxMesh->SetEnableGravity(true);
 		BoxMesh->SetSimulatePhysics(true);
-
+		BoxMesh->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 		BoxMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		BoxMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
 
