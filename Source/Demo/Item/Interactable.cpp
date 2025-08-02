@@ -122,5 +122,100 @@ void AInteractable::Tick(float deltatime)
 
 }
 
+void AInteractable::SetItemState(EItemState State)
+{
+	ItemState = State;
+	SetItemProperties(State);
+
+
+
+}
+
+void AInteractable::SetItemProperties(EItemState State)
+{
+	switch (State) 
+	{
+	case EItemState::EIS_Pickup:
+		BoxMesh->SetVisibility(true);
+		BoxMesh->SetSimulatePhysics(false);
+		BoxMesh->SetEnableGravity(false);
+		BoxMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		BoxMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
+
+		BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		BoxComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility,
+			ECollisionResponse::ECR_Block);
+		break;
+	case EItemState::EIS_EquipInterping:
+		BoxMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		BoxMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+
+		BoxMesh->SetSimulatePhysics(false);
+		BoxMesh->SetEnableGravity(false);
+		BoxMesh->SetVisibility(true);
+		break;
+	case EItemState::EIS_PickedUp:
+		BoxMesh->SetVisibility(false);
+		BoxMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		BoxMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+
+		BoxMesh->SetSimulatePhysics(false);
+		BoxMesh->SetEnableGravity(false);
+		break;
+	case EItemState::EIS_Equipped:
+		BoxMesh->SetVisibility(true);
+		BoxMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		BoxMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+
+		BoxMesh->SetSimulatePhysics(false);
+		BoxMesh->SetEnableGravity(false);
+		break;
+	case EItemState::EIS_Falling:
+		BoxMesh->SetVisibility(true);
+		BoxMesh->SetEnableGravity(true);
+		BoxMesh->SetSimulatePhysics(true);
+
+		BoxMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		BoxMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
+
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+
+		break;
+
+
+
+
+	}
+
+
+
+
+}
+
 
 

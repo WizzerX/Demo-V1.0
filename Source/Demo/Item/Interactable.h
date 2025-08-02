@@ -57,6 +57,7 @@ public:
 
 	bool bInteractable = false;
 
+	
 protected:
 
 	virtual void BeginPlay() override;
@@ -114,10 +115,13 @@ public:
 	FORCEINLINE USceneComponent* GetScene() { return SceneRoot; }
 	FORCEINLINE USphereComponent* GetSphere() { return SphereComponent; }
 	FORCEINLINE UBoxComponent* GetBox() { return BoxComponent; }
+	FORCEINLINE EItemState GetItemState()const { return ItemState; }
+	void SetItemState(EItemState State);
 public :
 	class AMainCharacter* CharacterRef;
 
 
-	
+private:
+	void SetItemProperties(EItemState State);
 	
 };

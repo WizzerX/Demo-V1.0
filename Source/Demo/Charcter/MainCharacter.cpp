@@ -130,7 +130,7 @@ void AMainCharacter::Fire()
 
 }
 
-void AMainCharacter::Drop()
+void AMainCharacter::DropItem()
 {
 
 	if (!CurrentItem)return;
@@ -141,8 +141,9 @@ void AMainCharacter::Drop()
 	CurrentItem->GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 	CurrentItem->GetMesh()->SetSimulatePhysics(true);
 	CurrentItem->GetWidgetComponent()->SetVisibility(false);
-	CurrentItem->GetBox()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	CurrentItem->GetSphere()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	CurrentItem->GetBox()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	CurrentItem->GetSphere()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+
 	CurrentItem = nullptr;
 	PreviousItem = nullptr;
 	
@@ -196,7 +197,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Pickup);
 	
-	PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &AMainCharacter::Drop);
+	PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &AMainCharacter::DropItem);
 
 }
 void AMainCharacter::CurrentTraceItem()
@@ -257,6 +258,7 @@ void  AMainCharacter::Pickup()
 
 	CurrentItem->GetMesh()->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
 	// Optional: disable collision and physics
+	/**
 	CurrentItem->GetBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	CurrentItem->GetSphere()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	CurrentItem->GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -264,7 +266,9 @@ void  AMainCharacter::Pickup()
 
 	// Hide the widget
 	CurrentItem->GetWidgetComponent()->SetVisibility(false);
-	
+	*/
+	CurrentItem->SetItemState(EItemState::EIS_Equipped);
+
 
 	
 }

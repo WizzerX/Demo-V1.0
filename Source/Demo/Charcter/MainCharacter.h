@@ -36,7 +36,7 @@ protected:
 	void Crouch();
 	void StopCrouch();
 	void Fire();
-	void Drop();
+	void DropItem();
 
 
 public:	
