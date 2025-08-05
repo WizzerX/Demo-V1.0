@@ -36,9 +36,6 @@ enum class EItemState :uint8
 	EIS_Falling UMETA(DisplayName = "Falling"),
 
 	EIS_MAX UMETA(DisplayName = "DefaultMAX")
-
-
-
 };
 
 
@@ -106,6 +103,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	EItemState ItemState;
+
 public:	
 
 	FORCEINLINE  UWidgetComponent* GetWidgetComponent() { return WidgetComponent; }
@@ -118,6 +116,11 @@ public:
 public :
 	class AMainCharacter* CharacterRef;
 
+	UFUNCTION()
+	void OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		FVector NormalImpulse, const FHitResult& Hit);
+
+	void CheckIfLanded();
 
 private:
 	void SetItemProperties(EItemState State);

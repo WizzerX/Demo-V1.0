@@ -50,8 +50,7 @@ void AMainCharacter::MoveRight(float value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
 		AddMovementInput(Direction, value);
-
-		
+	
 	}
 
 
@@ -123,10 +122,16 @@ void AMainCharacter::Fire()
 
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
+	UE_LOG(LogTemp, Warning, TEXT("RECHAL"));
 
 	GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_WorldStatic, Params);
 
 	DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 5.f);
+	if (CurrentItem)
+	{
+		CurrentItem->SetItemState(EItemState::EIS_Pickup);
+		UE_LOG(LogTemp, Warning, TEXT("RECHAL"));
+	}
 
 }
 
@@ -146,6 +151,7 @@ void AMainCharacter::DropItem()
 
 	CurrentItem->SetItemState(EItemState::EIS_Falling);
 
+	//if(CurrentItem->GetBox()->)
 
 	CurrentItem = nullptr;
 	PreviousItem = nullptr;
@@ -221,7 +227,7 @@ void AMainCharacter::CurrentTraceItem()
 			ECollisionChannel::ECC_Visibility);
 		
 		DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 3.f);
-		GEngine->AddOnScreenDebugMessage(23, 4, FColor::Green, FString("Jak is jacking"));
+		
 
 		AInteractable* Item = Cast <AInteractable>(HitResult.Actor);
 		
@@ -231,13 +237,16 @@ void AMainCharacter::CurrentTraceItem()
 			CurrentItem = Item;
 			CurrentItem->GetWidgetComponent()->SetVisibility(true);
 				
-			
-			
-
+			GEngine->AddOnScreenDebugMessage(23, 4, FColor::Green, FString("Traceing Widget"));
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, FString::Printf(TEXT("Hit Actor: %s"), *HitResult.GetActor()->GetName()));
 		}
-		else {
 			
+			
+		
+		else {
+			GEngine->AddOnScreenDebugMessage(23, 4, FColor::Red, FString("Failed Traceing Widget"));
 			CurrentItem = nullptr;
+			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("NOTHING HIT"));
 			
 		}
 		

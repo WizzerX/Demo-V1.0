@@ -46,12 +46,13 @@ void AInteractable::BeginPlay()
 {
 	Super::BeginPlay();
 
-
+	BoxMesh->OnComponentHit.AddDynamic(this, &AInteractable::OnCompHit);
 	BoxComponent->OnComponentBeginOverlap.AddDynamic(this, &AInteractable::OnBoxBeginOverlap);
 	BoxComponent->OnComponentEndOverlap.AddDynamic(this, &AInteractable::OnBoxEndOverlap);
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &AInteractable::OnSphereBeginOverlap);
 	SphereComponent->OnComponentEndOverlap.AddDynamic(this, &AInteractable::OnSphereEndOverlap);
 	 CharacterRef = Cast<AMainCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	 BoxMesh->SetNotifyRigidBodyCollision(true);
 }
 
 void AInteractable::OnBoxBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -104,6 +105,7 @@ void AInteractable::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComp, AAct
 	AMainCharacter* Character = Cast<AMainCharacter>(OtherActor);
 	if (OtherActor==Character && OtherActor != this)
 	{
+		WidgetComponent->SetVisibility(false);
 		CharacterRef->bInteractable = false;
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Player END Dectaced Overlap!"));
 
@@ -127,6 +129,7 @@ void AInteractable::Tick(float deltatime)
 
 void AInteractable::SetItemState(EItemState State)
 {
+
 	ItemState = State;
 	SetItemProperties(State);
 
@@ -134,21 +137,65 @@ void AInteractable::SetItemState(EItemState State)
 
 }
 
+
+
+void AInteractable::OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, 
+	FVector NormalImpulse, const FHitResult& Hit)
+{
+
+	
+	if (!OtherActor || OtherActor == this || !OtherComp) return;
+
+
+	if (ItemState == EItemState::EIS_Falling && OtherComp->GetCollisionObjectType() == ECC_WorldStatic)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item Landed, switching to Pickup"));
+		// ?? FIRST: Stop physics immediately
+		//BoxMesh->SetSimulatePhysics(false);
+//		BoxMesh->SetEnableGravity(false);
+
+		SetItemState(EItemState::EIS_Pickup);
+	}
+
+	
+
+
+}
+
+void AInteractable::CheckIfLanded()
+{
+
+	FVector Start = GetActorLocation();
+	FVector End = Start - FVector(0, 0, 10); // small downward trace
+	FHitResult Hit;
+
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_WorldStatic, Params);
+	
+	if (bHit && BoxMesh->IsSimulatingPhysics() && BoxMesh->GetPhysicsLinearVelocity().Size() < 10.f)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("LineTraceing is Happening"));
+		SetItemState(EItemState::EIS_Pickup);
+	}
+}
+
 void AInteractable::SetItemProperties(EItemState State)
 {
 	switch (State) 
 	{
 	case EItemState::EIS_Pickup:
-		WidgetComponent->SetVisibility(false);
-		BoxMesh->SetVisibility(true);
+	
 		BoxMesh->SetSimulatePhysics(false);
 		BoxMesh->SetEnableGravity(false);
+		BoxMesh->SetVisibility(true);
+		BoxMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		BoxMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-		BoxMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 		SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 		SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		
+
 
 		BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		BoxComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility,
@@ -204,16 +251,17 @@ void AInteractable::SetItemProperties(EItemState State)
 		BoxMesh->SetVisibility(true);
 		BoxMesh->SetEnableGravity(true);
 		BoxMesh->SetSimulatePhysics(true);
-		BoxMesh->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-		BoxMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		BoxMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		BoxMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
 		BoxMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
+		BoxMesh->SetCollisionObjectType(ECC_PhysicsBody);
 
-		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 
 		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-
 		break;
 
 
