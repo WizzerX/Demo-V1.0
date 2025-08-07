@@ -10,11 +10,13 @@
 #include "Components/CapsuleComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Components/SceneComponent.h"
-#include "Demo/Item/Interactable.h"
+
 #include "Components/WidgetComponent.h"
 #include <Kismet/GameplayStatics.h>
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
+#include "Demo/Item/PickupableItem.h"
+
 
 AMainCharacter::AMainCharacter()
 {
@@ -122,41 +124,44 @@ void AMainCharacter::Fire()
 
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
-	UE_LOG(LogTemp, Warning, TEXT("RECHAL"));
+	
 
 	GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_WorldStatic, Params);
 
 	DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 5.f);
+	/*
 	if (CurrentItem)
 	{
 		CurrentItem->SetItemState(EItemState::EIS_Pickup);
-		UE_LOG(LogTemp, Warning, TEXT("RECHAL"));
+		
 	}
-
+	
+	*/
 }
 
 void AMainCharacter::DropItem()
 {
-
-	if (!CurrentItem)return;
+	
+	if (!CurrentItem )return;
 
 	
 	UE_LOG(LogTemp, Warning, TEXT("Drop THE ITEM"));
 	
+	if (PickupableItem)
+	{
+		PickupableItem->GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 
-	CurrentItem->GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+
+
+
+		PickupableItem->SetItemState(EItemState::EIS_Falling);
+
+		//if(CurrentItem->GetBox()->)
+		PickupableItem = nullptr;
+		CurrentItem = nullptr;
+		PreviousItem = nullptr;
+	}
 	
-
-	
-
-	CurrentItem->SetItemState(EItemState::EIS_Falling);
-
-	//if(CurrentItem->GetBox()->)
-
-	CurrentItem = nullptr;
-	PreviousItem = nullptr;
-	
-
 
 }
 
@@ -203,7 +208,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMainCharacter::Fire);
 
-	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::Pickup);
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::EPressed);
+	PlayerInputComponent->BindAction("Interact", IE_Released, this, &AMainCharacter::EReleased);
 	
 	PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &AMainCharacter::DropItem);
 
@@ -229,11 +235,26 @@ void AMainCharacter::CurrentTraceItem()
 		DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 3.f);
 		
 
-		AInteractable* Item = Cast <AInteractable>(HitResult.Actor);
-		
-		
+	
+		ABaseInteractable* Item = Cast<ABaseInteractable>(HitResult.Actor);
+
+		APickupableItem* PickableItem = Cast<APickupableItem>(HitResult.Actor);
+
+
+
+
+
 		if (HitResult.bBlockingHit && Item)
 		{
+			
+			if (PickableItem)
+			{
+				GEngine->AddOnScreenDebugMessage(23, 4, FColor::Green, FString("Pickable Item Dectated"));
+				PickupableItem = PickableItem;
+				CurrentItem = Item;
+				CurrentItem->GetWidgetComponent()->SetVisibility(true);
+			}
+		
 			CurrentItem = Item;
 			CurrentItem->GetWidgetComponent()->SetVisibility(true);
 				
@@ -267,22 +288,31 @@ void AMainCharacter::Equip()
 
 void  AMainCharacter::Pickup()
 {
-	if (!CurrentItem)return;
+	if (!PickupableItem)return;
 
-	CurrentItem->GetMesh()->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
-	// Optional: disable collision and physics
-	/**
-	CurrentItem->GetBox()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	CurrentItem->GetSphere()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	CurrentItem->GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	CurrentItem->GetMesh()->SetSimulatePhysics(false);
+	if (PickupableItem) {
+		PickupableItem->GetMesh()->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
+		PickupableItem->SetItemState(EItemState::EIS_Equipped);
 
-	// Hide the widget
-	CurrentItem->GetWidgetComponent()->SetVisibility(false);
-	*/
-	CurrentItem->SetItemState(EItemState::EIS_Equipped);
-
-
+	}
 	
 }
 
+void AMainCharacter::EPressed()
+{
+	
+	bEPressed = true;
+	if (PickupableItem)
+		Pickup();
+		
+}
+
+void AMainCharacter::EReleased()
+{
+	bEPressed = false;
+	
+
+
+
+
+}

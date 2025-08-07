@@ -18,6 +18,10 @@ class DEMO_API AMainCharacter : public ACharacter
 	class UCameraComponent* camera;
 
 
+private:
+	void EPressed();
+	void EReleased();
+
 
 
 public:
@@ -76,9 +80,13 @@ public:
 
 public:
 	bool bCrouch = false;
-	class  AInteractable* PreviousItem;
-	 class AInteractable* CurrentItem;
+	class  ABaseInteractable* PreviousItem;
+	 class ABaseInteractable* CurrentItem;
+	 class APickupableItem* PickupableItem;
 	 bool bInteractable=false;
-
+	 bool bEPressed = false;
 	
+
+
+
 };
