@@ -35,7 +35,7 @@ ABaseInteractable::ABaseInteractable()
 
 
 	
-
+	ItemCategory = EItemCategory::IC_NONE;
 
 
 

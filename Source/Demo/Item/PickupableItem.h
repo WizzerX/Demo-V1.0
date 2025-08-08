@@ -76,5 +76,7 @@ private:
 	class AMainCharacter* CharacterRef;
 
 	
+	virtual void Interact(AMainCharacter* Character) override;
+
 
 };

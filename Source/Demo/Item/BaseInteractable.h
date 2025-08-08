@@ -6,6 +6,19 @@
 #include "GameFramework/Actor.h"
 #include "BaseInteractable.generated.h"
 
+UENUM(BlueprintType)
+enum class EItemCategory :uint8
+{
+	IC_NONE UMETA(DisplayName = "NONE"),
+	IC_WEAPON UMETA(DisplayName = "VLUE"),
+	IC_LEVER UMETA(DisplayName = "VALUE"),
+	IC_CONSUMBLE UMETA (DisplayName = "VALUE"),	
+	IC_NOTES UMETA(DisplayName = "VALUE")
+
+
+
+};
+
 
 
 
@@ -66,13 +79,16 @@ protected:
 
 	virtual bool IsPickable()const { return false; }
 
-	virtual void Interact(class AMainCharacter* Character) PURE_VIRTUAL(ABaseInteractable::Interact, );
+	UPROPERTY(VisibleAnyWhere,BlueprintReadOnly)
+	EItemCategory ItemCategory;
+	
 
 
 public:	
 
 	virtual void Tick(float DeltaTime) override;
-
+	UFUNCTION(BlueprintCallable)
+	virtual void Interact(AMainCharacter* Character)  PURE_VIRTUAL(ABaseInteractable::Interact, );
 
 	FORCEINLINE  UWidgetComponent* GetWidgetComponent() { return WidgetComponent; }
 	FORCEINLINE UStaticMeshComponent* GetMesh() { return BoxMesh; }

@@ -246,7 +246,7 @@ void AMainCharacter::CurrentTraceItem()
 
 		if (HitResult.bBlockingHit && Item)
 		{
-			
+			/*
 			if (PickableItem)
 			{
 				GEngine->AddOnScreenDebugMessage(23, 4, FColor::Green, FString("Pickable Item Dectated"));
@@ -254,7 +254,9 @@ void AMainCharacter::CurrentTraceItem()
 				CurrentItem = Item;
 				CurrentItem->GetWidgetComponent()->SetVisibility(true);
 			}
-		
+		*/
+
+			Item->Interact(this);
 			CurrentItem = Item;
 			CurrentItem->GetWidgetComponent()->SetVisibility(true);
 				
