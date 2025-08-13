@@ -140,6 +140,21 @@ void APickupableItem::SetItemProperties(EItemState State)
 
 
 
+void APickupableItem::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AMainCharacter* Character = Cast<AMainCharacter>(OtherActor);
+	if (OtherActor == Character && OtherActor != this)
+	{
+		WidgetComponent->SetVisibility(false);
+		CharacterRef->bInteractable = true;
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Player END Dectaced Overlap!"));
+
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Sphere End Overlap!"));
+
+	}
+
+}
+
 void APickupableItem::BeginPlay()
 {
 	Super::BeginPlay();

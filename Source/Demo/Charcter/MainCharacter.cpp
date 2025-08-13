@@ -10,7 +10,6 @@
 #include "Components/CapsuleComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Components/SceneComponent.h"
-
 #include "Components/WidgetComponent.h"
 #include <Kismet/GameplayStatics.h>
 #include "Components/BoxComponent.h"
@@ -147,16 +146,16 @@ void AMainCharacter::DropItem()
 	
 	UE_LOG(LogTemp, Warning, TEXT("Drop THE ITEM"));
 	
-	if (PickupableItem)
+	if (CurrentItem)
 	{
-		PickupableItem->GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		CurrentItem->GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 
 
 
 
-		PickupableItem->SetItemState(EItemState::EIS_Falling);
+		CurrentItem->SetItemState(EItemState::EIS_Falling);
 
-		//if(CurrentItem->GetBox()->)
+		
 		PickupableItem = nullptr;
 		CurrentItem = nullptr;
 		PreviousItem = nullptr;
@@ -256,8 +255,10 @@ void AMainCharacter::CurrentTraceItem()
 			}
 		*/
 
-			Item->Interact(this);
-			CurrentItem = Item;
+			
+			
+			CurrentItem = PickableItem;
+			//PickableItem->Interact(this);
 			CurrentItem->GetWidgetComponent()->SetVisibility(true);
 				
 			GEngine->AddOnScreenDebugMessage(23, 4, FColor::Green, FString("Traceing Widget"));
@@ -290,12 +291,19 @@ void AMainCharacter::Equip()
 
 void  AMainCharacter::Pickup()
 {
-	if (!PickupableItem)return;
+	//GEngine->AddOnScreenDebugMessage(23, 4, FColor::Red, FString("USING APPLE"));
+	//UE_LOG(LogTemp, Error, TEXT("APPLE IS USED!"));
+	if (!CurrentItem)return;
+	
 
-	if (PickupableItem) {
-		PickupableItem->GetMesh()->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
-		PickupableItem->SetItemState(EItemState::EIS_Equipped);
-
+	if (CurrentItem) 
+	{
+		CurrentItem->Interact(this);
+		if (CurrentItem->IsPickable())
+		{
+			CurrentItem->GetMesh()->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
+			CurrentItem->SetItemState(EItemState::EIS_Equipped);
+		}
 	}
 	
 }
@@ -304,7 +312,7 @@ void AMainCharacter::EPressed()
 {
 	
 	bEPressed = true;
-	if (PickupableItem)
+	if (CurrentItem)
 		Pickup();
 		
 }

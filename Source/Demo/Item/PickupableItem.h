@@ -71,11 +71,16 @@ private:
 	virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
 
+
+	void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 	virtual void BeginPlay() override;
 
 	class AMainCharacter* CharacterRef;
 
 	
+public:
 	virtual void Interact(AMainCharacter* Character) override;
 
 

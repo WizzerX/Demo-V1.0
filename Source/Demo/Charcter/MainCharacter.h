@@ -80,8 +80,8 @@ public:
 
 public:
 	bool bCrouch = false;
-	class  ABaseInteractable* PreviousItem;
-	 class ABaseInteractable* CurrentItem;
+	class  APickupableItem* PreviousItem;
+	 class APickupableItem* CurrentItem;
 	 class APickupableItem* PickupableItem;
 	 bool bInteractable=false;
 	 bool bEPressed = false;
