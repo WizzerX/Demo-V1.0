@@ -41,6 +41,10 @@ protected:
 	void StopCrouch();
 	void Fire();
 	void DropItem();
+	void Slot1();
+	void Slot2();
+	void Slot3();
+	void Slot4();
 
 
 public:	
@@ -74,7 +78,8 @@ public:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = movement, meta = (AllowPrivateAccess = true))
 	USceneComponent* AttachPoint;
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Inventroy, meta = (AllowPrivateAccess = true))
+   class	UInventoryComponent* InventoryComponent;
 
 
 

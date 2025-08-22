@@ -6,26 +6,32 @@
 #include "Demo/Item/BaseInteractable.h"
 #include "PickupableItem.generated.h"
 
-
 USTRUCT(BlueprintType)
-struct FItemData
+struct FInventoryItemData
 {
 	GENERATED_BODY()
+
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
 	FText ItemName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
 	FText Description;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	int32 Count;
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
+	int	Quantity;
 
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
+	UTexture2D* Icon = nullptr;
 
-
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
+	int Weight;
 
 };
+
+
+
 UENUM(BlueprintType)
 enum class EItemState :uint8
 {
@@ -42,7 +48,6 @@ enum class EItemState :uint8
 
 
 
-
 UCLASS()
 class DEMO_API APickupableItem : public ABaseInteractable
 {
@@ -54,13 +59,17 @@ public:
 	void SetItemState(EItemState state);
 	virtual bool IsPickable()const { return true; }
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Data")
-	FItemData ItemData;
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	EItemState ItemState;
 
+
+	
+
+
 	void SetItemProperties(EItemState State);
+
 
 	
 private:
@@ -82,6 +91,9 @@ private:
 	
 public:
 	virtual void Interact(AMainCharacter* Character) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	FInventoryItemData ItemData;
 
 
 };

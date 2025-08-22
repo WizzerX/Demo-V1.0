@@ -7,6 +7,7 @@
 #include "Components/BoxComponent.h"
 #include "Demo/Item/BaseInteractable.h"
 #include "Demo/Charcter/MainCharacter.h"
+#include "Demo/Item/InventoryComponent.h"
 APickupableItem::APickupableItem()
 {
 
@@ -171,6 +172,7 @@ void APickupableItem::BeginPlay()
 void APickupableItem::Interact(AMainCharacter* Character)
 {
 	GEngine->AddOnScreenDebugMessage(23, 4, FColor::Purple, FString("PURE FUNCTION IS CALLED"));
+	
 
 	UE_LOG(LogTemp, Warning, TEXT("PURE IS CALLLED"));
 }

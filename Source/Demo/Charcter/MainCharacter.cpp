@@ -15,8 +15,8 @@
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Demo/Item/PickupableItem.h"
-
-
+#include "Demo/Item/InventoryComponent.h"
+#include "string"
 AMainCharacter::AMainCharacter()
 {
  	
@@ -30,6 +30,9 @@ AMainCharacter::AMainCharacter()
 	AttachPoint = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
 	AttachPoint->AttachTo(GetRootComponent());
 	
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
+	
+
 }
 
 
@@ -164,6 +167,31 @@ void AMainCharacter::DropItem()
 
 }
 
+void AMainCharacter::Slot1()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Slot1 is pressed!"));
+FInventoryItemData* data=InventoryComponent->Inventory.GetData();
+
+UE_LOG(LogTemp, Warning, TEXT("ITem Name"), data->ItemName.ToString());
+
+}
+
+void AMainCharacter::Slot2()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Slot2  is pressed!"));
+}
+
+void AMainCharacter::Slot3()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Slot3  is pressed!"));
+}
+
+void AMainCharacter::Slot4()
+{
+
+	UE_LOG(LogTemp, Warning, TEXT("Slot4  is pressed!"));
+}
+
 
 void AMainCharacter::Tick(float DeltaTime)
 {
@@ -212,6 +240,10 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	
 	PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &AMainCharacter::DropItem);
 
+	PlayerInputComponent->BindAction("Slot-1",IE_Pressed, this, &AMainCharacter::Slot1);
+	PlayerInputComponent->BindAction("Slot-2", IE_Pressed, this, &AMainCharacter::Slot2);
+	PlayerInputComponent->BindAction("Slot-3", IE_Pressed, this, &AMainCharacter::Slot3);
+	PlayerInputComponent->BindAction("Slot-4", IE_Pressed, this, &AMainCharacter::Slot4);
 }
 void AMainCharacter::CurrentTraceItem()
 {
@@ -258,16 +290,17 @@ void AMainCharacter::CurrentTraceItem()
 			
 			
 			CurrentItem = PickableItem;
-			//PickableItem->Interact(this);
+			
 			CurrentItem->GetWidgetComponent()->SetVisibility(true);
 				
 			GEngine->AddOnScreenDebugMessage(23, 4, FColor::Green, FString("Traceing Widget"));
 			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, FString::Printf(TEXT("Hit Actor: %s"), *HitResult.GetActor()->GetName()));
 		}
 			
-			
 		
-		else {
+		
+		else 
+		{
 			GEngine->AddOnScreenDebugMessage(23, 4, FColor::Red, FString("Failed Traceing Widget"));
 			CurrentItem = nullptr;
 			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("NOTHING HIT"));
@@ -277,7 +310,7 @@ void AMainCharacter::CurrentTraceItem()
 		
 		
 	
-	
+		
 }
 
 
@@ -291,8 +324,7 @@ void AMainCharacter::Equip()
 
 void  AMainCharacter::Pickup()
 {
-	//GEngine->AddOnScreenDebugMessage(23, 4, FColor::Red, FString("USING APPLE"));
-	//UE_LOG(LogTemp, Error, TEXT("APPLE IS USED!"));
+	
 	if (!CurrentItem)return;
 	
 
@@ -301,8 +333,13 @@ void  AMainCharacter::Pickup()
 		CurrentItem->Interact(this);
 		if (CurrentItem->IsPickable())
 		{
-			CurrentItem->GetMesh()->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
-			CurrentItem->SetItemState(EItemState::EIS_Equipped);
+			
+			InventoryComponent->AddItem(CurrentItem->ItemData);
+			CurrentItem->Destroy();
+			//CurrentItem->GetMesh()->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
+			//CurrentItem->SetItemState(EItemState::EIS_Equipped);
+
+
 		}
 	}
 	

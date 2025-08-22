@@ -14,18 +14,18 @@ class DEMO_API AConsumble : public APickupableItem
 {
 	GENERATED_BODY()
 
-protected:
+
 
 
 
 public:
-	virtual void Interact(AMainCharacter* Character) override;
+	
 
 	virtual bool IsPickable()const { return false; }
 
 
 private:
-
+	virtual void Interact(AMainCharacter* Character) override;
 
 	AConsumble();
 };
