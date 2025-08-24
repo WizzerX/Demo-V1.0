@@ -12,6 +12,7 @@ struct FInventoryItemData
 	GENERATED_BODY()
 
 public:
+	FInventoryItemData();
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
 	FText ItemName;
@@ -27,6 +28,10 @@ public:
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
 	int Weight;
+
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
+	TSubclassOf<APickupableItem>ItemActorClass;
 
 };
 

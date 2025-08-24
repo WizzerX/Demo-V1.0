@@ -24,7 +24,6 @@ void UInventoryComponent::AddItem(FInventoryItemData& Item)
 
 }
 
-
 void UInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -40,5 +39,18 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	
+}
+
+FInventoryItemData UInventoryComponent::GetItemAt(int32 index)
+{
+	if (Inventory.IsValidIndex(index))
+	{
+		return Inventory[index];
+	}
+	else
+	{
+	
+	}
+
 }
 

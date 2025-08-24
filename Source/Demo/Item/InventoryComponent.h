@@ -23,16 +23,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TArray<FInventoryItemData>slot;
 		
-	void AddItem(FInventoryItemData& Item);
+	
 
 
 protected:
 	
+	void AddItem(FInventoryItemData& Item);
+
 	virtual void BeginPlay() override;
 
 public:	
 	
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction*
+		ThisTickFunction) override;
+	FInventoryItemData GetItemAt(int32 index);
 		
 };

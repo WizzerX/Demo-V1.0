@@ -170,9 +170,25 @@ void AMainCharacter::DropItem()
 void AMainCharacter::Slot1()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Slot1 is pressed!"));
-FInventoryItemData* data=InventoryComponent->Inventory.GetData();
+const FInventoryItemData& item=InventoryComponent->Inventory[0];                                               
+	
+// Spawn actor
+FActorSpawnParameters Params;
+Params.Owner = this;
+Params.Instigator = GetInstigator();
+Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-UE_LOG(LogTemp, Warning, TEXT("ITem Name"), data->ItemName.ToString());
+GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, FVector::ZeroVector, FRotator::ZeroRotator, Params);
+
+
+CurrentItem->GetMesh()->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
+			//CurrentItem->SetItemState(EItemState::EIS_Equipped);
+
+
+
+
+
+UE_LOG(LogTemp, Warning, TEXT("ITem Name %s"), *item.ItemName.ToString());
 
 }
 

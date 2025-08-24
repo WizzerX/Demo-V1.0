@@ -1,4 +1,3 @@
-
 #include "Demo/Item/PickupableItem.h"
 #include "Demo/Charcter/MainCharacter.h"
 #include "Kismet/GameplayStatics.h"
@@ -183,5 +182,12 @@ void APickupableItem::SetItemState(EItemState State)
 {
 	ItemState = State;
 	SetItemProperties(State);
+
+}
+
+FInventoryItemData::FInventoryItemData()
+{
+
+
 
 }
