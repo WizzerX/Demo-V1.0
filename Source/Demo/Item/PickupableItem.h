@@ -15,10 +15,10 @@ public:
 	FInventoryItemData();
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
-	FText ItemName;
+	FString ItemName;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
-	FText Description;
+	FString Description;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
 	int	Quantity;

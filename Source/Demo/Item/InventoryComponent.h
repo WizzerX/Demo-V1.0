@@ -28,7 +28,7 @@ public:
 
 protected:
 	
-	void AddItem(FInventoryItemData& Item);
+	
 
 	virtual void BeginPlay() override;
 
@@ -36,6 +36,8 @@ public:
 	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction*
 		ThisTickFunction) override;
-	FInventoryItemData GetItemAt(int32 index);
-		
+	FInventoryItemData GetItemAt( const int32 index);
+
+	void RemoveItem( const  FInventoryItemData& Item);
+	void AddItem( const FInventoryItemData& Item);
 };

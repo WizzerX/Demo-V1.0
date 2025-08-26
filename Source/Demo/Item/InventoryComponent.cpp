@@ -16,10 +16,27 @@ UInventoryComponent::UInventoryComponent()
 
 
 
-void UInventoryComponent::AddItem(FInventoryItemData& Item)
+void UInventoryComponent::RemoveItem(const FInventoryItemData& Item)
 {
-	Inventory.Add(Item);
-	UE_LOG(LogTemp, Warning, TEXT("ItemAddToInvenory"));
+	for (int i = 0; i < Inventory.Num(); i++)
+	{
+		if (Inventory[i].ItemName == Item.ItemName)
+		{
+			Inventory.RemoveAt(i);
+			break;
+		}
+
+
+	}
+																		
+				
+		
+}
+
+void UInventoryComponent::AddItem( const FInventoryItemData& Item)
+{
+	Inventory.Add(Item);															
+	UE_LOG(LogTemp, Warning, TEXT("ItemAddToInvenory"));						
 
 
 }
@@ -41,7 +58,7 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	
 }
 
-FInventoryItemData UInventoryComponent::GetItemAt(int32 index)
+FInventoryItemData UInventoryComponent::GetItemAt( const int32 index)
 {
 	if (Inventory.IsValidIndex(index))
 	{
@@ -49,7 +66,7 @@ FInventoryItemData UInventoryComponent::GetItemAt(int32 index)
 	}
 	else
 	{
-	
+		return FInventoryItemData();
 	}
 
 }

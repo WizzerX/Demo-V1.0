@@ -170,7 +170,7 @@ void AMainCharacter::DropItem()
 void AMainCharacter::Slot1()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Slot1 is pressed!"));
-const FInventoryItemData& item=InventoryComponent->Inventory[0];                                               
+const	FInventoryItemData& item = InventoryComponent->GetItemAt(0);
 	
 // Spawn actor
 FActorSpawnParameters Params;
@@ -178,34 +178,51 @@ Params.Owner = this;
 Params.Instigator = GetInstigator();
 Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, FVector::ZeroVector, FRotator::ZeroRotator, Params);
+CurrentItem= GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
 
-
-CurrentItem->GetMesh()->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
-			//CurrentItem->SetItemState(EItemState::EIS_Equipped);
-
+InventoryComponent->Inventory.Remove(item);
 
 
 
 
-UE_LOG(LogTemp, Warning, TEXT("ITem Name %s"), *item.ItemName.ToString());
+
+
+
 
 }
 
 void AMainCharacter::Slot2()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Slot2  is pressed!"));
+const FInventoryItemData& item = InventoryComponent->GetItemAt(1);
+
+
+	// Spawn actor
+	FActorSpawnParameters Params;
+	Params.Owner = this;
+	Params.Instigator = GetInstigator();
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
+ InventoryComponent->RemoveItem(item);
 }
 
 void AMainCharacter::Slot3()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Slot3  is pressed!"));
+	const FInventoryItemData& item = InventoryComponent->GetItemAt(2);
+
 }
 
 void AMainCharacter::Slot4()
 {
-
 	UE_LOG(LogTemp, Warning, TEXT("Slot4  is pressed!"));
+	const FInventoryItemData& item = InventoryComponent->GetItemAt(3);
+
+
+
+
+	
 }
 
 
@@ -350,7 +367,7 @@ void  AMainCharacter::Pickup()
 		if (CurrentItem->IsPickable())
 		{
 			
-			InventoryComponent->AddItem(CurrentItem->ItemData);
+			InventoryComponent->Inventory.Add(CurrentItem->ItemData);
 			CurrentItem->Destroy();
 			//CurrentItem->GetMesh()->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
 			//CurrentItem->SetItemState(EItemState::EIS_Equipped);
