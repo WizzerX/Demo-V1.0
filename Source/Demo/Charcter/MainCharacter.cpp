@@ -180,13 +180,7 @@ Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::Alwa
 
 CurrentItem= GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
 
-InventoryComponent->Inventory.Remove(item);
-
-
-
-
-
-
+InventoryComponent->RemoveItem(item);
 
 
 }
@@ -204,7 +198,7 @@ const FInventoryItemData& item = InventoryComponent->GetItemAt(1);
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
- InventoryComponent->RemoveItem(item);
+ //InventoryComponent->RemoveItem(item);
 }
 
 void AMainCharacter::Slot3()
@@ -367,7 +361,7 @@ void  AMainCharacter::Pickup()
 		if (CurrentItem->IsPickable())
 		{
 			
-			InventoryComponent->Inventory.Add(CurrentItem->ItemData);
+			InventoryComponent->AddItem(CurrentItem->ItemData);
 			CurrentItem->Destroy();
 			//CurrentItem->GetMesh()->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
 			//CurrentItem->SetItemState(EItemState::EIS_Equipped);

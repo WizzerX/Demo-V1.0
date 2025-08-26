@@ -16,27 +16,31 @@ UInventoryComponent::UInventoryComponent()
 
 
 
+
+
+
+void UInventoryComponent::AddItem( const FInventoryItemData& Item)
+{
+	Inventory.Add(Item);															
+	UE_LOG(LogTemp, Warning, TEXT("ItemAddToInvenory"));						
+
+
+}
+
 void UInventoryComponent::RemoveItem(const FInventoryItemData& Item)
 {
-	for (int i = 0; i < Inventory.Num(); i++)
+	for (int i = 0; i < Inventory.Num(); ++i)
 	{
 		if (Inventory[i].ItemName == Item.ItemName)
 		{
 			Inventory.RemoveAt(i);
 			break;
 		}
-
-
 	}
-																		
-				
-		
-}
 
-void UInventoryComponent::AddItem( const FInventoryItemData& Item)
-{
-	Inventory.Add(Item);															
-	UE_LOG(LogTemp, Warning, TEXT("ItemAddToInvenory"));						
+
+
+
 
 
 }

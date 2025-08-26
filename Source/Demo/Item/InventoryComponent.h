@@ -38,6 +38,9 @@ public:
 		ThisTickFunction) override;
 	FInventoryItemData GetItemAt( const int32 index);
 
-	void RemoveItem( const  FInventoryItemData& Item);
+	
 	void AddItem( const FInventoryItemData& Item);
+
+	void RemoveItem(const FInventoryItemData& Item);
+	
 };
