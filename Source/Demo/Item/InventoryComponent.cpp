@@ -32,17 +32,20 @@ void UInventoryComponent::AddItem( const FInventoryItemData& Item)
 			else
 			{
 				Inventory[i].Quantity += 1;
+				UE_LOG(LogTemp, Error, TEXT("Quantity is added"));
+				break;
 			}
 		}
 		
-			Inventory.Add(Item);
-			UE_LOG(LogTemp, Warning, TEXT("ItemAddToInvenory"));
+		
 		
 
 	}
-
-
-
+	if (Inventory.Num() == 0)
+	{
+		Inventory.Add(Item);
+		UE_LOG(LogTemp, Warning, TEXT("ItemAddToInvenory"));
+	}
 															
 						
 

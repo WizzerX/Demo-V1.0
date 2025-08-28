@@ -363,6 +363,7 @@ void  AMainCharacter::Pickup()
 			
 			InventoryComponent->AddItem(CurrentItem->ItemData);
 			CurrentItem->Destroy();
+			
 			//CurrentItem->GetMesh()->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
 			//CurrentItem->SetItemState(EItemState::EIS_Equipped);
 
