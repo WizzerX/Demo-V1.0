@@ -198,7 +198,7 @@ const FInventoryItemData& item = InventoryComponent->GetItemAt(1);
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
- //InventoryComponent->RemoveItem(item);
+InventoryComponent->RemoveItem(item);
 }
 
 void AMainCharacter::Slot3()

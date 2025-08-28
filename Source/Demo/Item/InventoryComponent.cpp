@@ -25,20 +25,26 @@ void UInventoryComponent::AddItem( const FInventoryItemData& Item)
 	{
 		if (Item.ItemName == Inventory[i].ItemName)
 		{
-			Inventory[i].Quantity += 1;
-
+			if (Inventory[i].Quantity == 5)
+			{
+				Inventory.Add(Item);
+			}
+			else
+			{
+				Inventory[i].Quantity += 1;
+			}
 		}
-		else
-		{
+		
 			Inventory.Add(Item);
-		}
+			UE_LOG(LogTemp, Warning, TEXT("ItemAddToInvenory"));
+		
 
 	}
 
 
 
-	Inventory.Add(Item);															
-	UE_LOG(LogTemp, Warning, TEXT("ItemAddToInvenory"));						
+															
+						
 
 
 }
