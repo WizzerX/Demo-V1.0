@@ -24,7 +24,7 @@ public:
 	TArray<FInventoryItemData>slot;
 		
 	
-
+	bool bItemFound = false;
 
 protected:
 	

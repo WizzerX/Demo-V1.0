@@ -21,32 +21,39 @@ UInventoryComponent::UInventoryComponent()
 
 void UInventoryComponent::AddItem( const FInventoryItemData& Item)
 {
+
+
 	for (int i = 0; i < Inventory.Num(); i++)
 	{
 		if (Item.ItemName == Inventory[i].ItemName)
 		{
-			if (Inventory[i].Quantity == 5)
+			if (Inventory[i].Quantity < 5)
 			{
-				Inventory.Add(Item);
+				Inventory[i].Quantity += 1;
+				
+				UE_LOG(LogTemp, Error, TEXT("Quantity Item Added!"));
 			}
 			else
 			{
-				Inventory[i].Quantity += 1;
-				UE_LOG(LogTemp, Error, TEXT("Quantity is added"));
+				Inventory.Add(Item);
+				UE_LOG(LogTemp, Error, TEXT("Inventory is added"));
 				break;
 			}
+			 bItemFound = true;
+			break;
 		}
-		
-		
-		
 
 	}
-	if (Inventory.Num() == 0)
+	if (!bItemFound)
 	{
 		Inventory.Add(Item);
-		UE_LOG(LogTemp, Warning, TEXT("ItemAddToInvenory"));
+		UE_LOG(LogTemp, Error, TEXT("Inventory Item Added!"));
+
 	}
-															
+	
+		
+
+	
 						
 
 
