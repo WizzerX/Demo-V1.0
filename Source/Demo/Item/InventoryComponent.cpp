@@ -1,6 +1,8 @@
 #include "Demo/Item/InventoryComponent.h"
 #include "string"
 #include "Demo/Item/PickupableItem.h"
+#include "array"
+
 
 
 
@@ -8,7 +10,7 @@ UInventoryComponent::UInventoryComponent()
 {
 	
 	PrimaryComponentTick.bCanEverTick = true;
-
+	Inventory.SetNum(4,false);
 
 }
 
@@ -19,30 +21,29 @@ UInventoryComponent::UInventoryComponent()
 
 
 
-void UInventoryComponent::AddItem( const FInventoryItemData& Item)
+void UInventoryComponent::AddItem(const FInventoryItemData& Item)
 {
-
+	bItemFound = false;
 
 	for (int i = 0; i < Inventory.Num(); i++)
 	{
 		if (Item.ItemName == Inventory[i].ItemName)
 		{
-			if (Inventory[i].Quantity < 5)
+			bItemFound = true;
+			if (Inventory[i].Quantity< 5)
 			{
-				Inventory[i].Quantity += 1;
-				
+				Inventory[i].Quantity++;
 				UE_LOG(LogTemp, Error, TEXT("Quantity Item Added!"));
 			}
 			else
 			{
 				Inventory.Add(Item);
-				UE_LOG(LogTemp, Error, TEXT("Inventory is added"));
-				break;
+				UE_LOG(LogTemp, Error, TEXT("Inventory Item Added!"));
 			}
-			 bItemFound = true;
 			break;
-		}
 
+		}
+	
 	}
 	if (!bItemFound)
 	{
@@ -50,35 +51,26 @@ void UInventoryComponent::AddItem( const FInventoryItemData& Item)
 		UE_LOG(LogTemp, Error, TEXT("Inventory Item Added!"));
 
 	}
-	
-		
-
-	
-						
 
 
 }
 
 void UInventoryComponent::RemoveItem(const FInventoryItemData& Item)
 {
-	for (int i = 0; i < Inventory.Num(); ++i)
+	for (int i = 0; i < Inventory.Num();i++)
 	{
 		if (Inventory[i].ItemName == Item.ItemName)
 		{
-			if (Inventory[i].Quantity == 0)
+			Inventory[i].Quantity--;
+			if (Inventory[i].Quantity <= 0)
 			{
 				Inventory.RemoveAt(i);
-				break;
+				
 			}
-
-			Inventory[i].Quantity -= 1;
+			break;
 		}
+		
 	}
-
-
-
-
-
 
 }
 
@@ -103,11 +95,16 @@ FInventoryItemData UInventoryComponent::GetItemAt( const int32 index)
 {
 	if (Inventory.IsValidIndex(index))
 	{
-		return Inventory[index];
+		return  Inventory[index];
 	}
 	else
 	{
-		return FInventoryItemData();
+			  // Return a default item instead of empty reference
+			  FInventoryItemData DefaultItem;
+			  DefaultItem.ItemName = FName("Empty");
+			  DefaultItem.Quantity = 0;
+			  return DefaultItem;
+			  
 	}
 
 }

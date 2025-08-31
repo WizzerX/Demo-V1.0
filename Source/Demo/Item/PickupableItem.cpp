@@ -160,7 +160,7 @@ void APickupableItem::BeginPlay()
 	Super::BeginPlay();
 	BoxMesh->SetNotifyRigidBodyCollision(true);
 	BoxMesh->OnComponentHit.AddDynamic(this, &APickupableItem::OnCompHit);
-	CharacterRef = Cast<AMainCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	CharacterRef = Cast<AMainCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
 	
 
 

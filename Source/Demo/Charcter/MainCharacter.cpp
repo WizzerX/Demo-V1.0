@@ -170,18 +170,22 @@ void AMainCharacter::DropItem()
 void AMainCharacter::Slot1()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Slot1 is pressed!"));
-const	FInventoryItemData& item = InventoryComponent->GetItemAt(0);
+
 	
-// Spawn actor
-FActorSpawnParameters Params;
-Params.Owner = this;
-Params.Instigator = GetInstigator();
-Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		const	FInventoryItemData& item = InventoryComponent->GetItemAt(0);
 
-CurrentItem= GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
 
-InventoryComponent->RemoveItem(item);
+		// Spawn actor
+		FActorSpawnParameters Params;
+		Params.Owner = this;
+		Params.Instigator = GetInstigator();
+		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
+		GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
+
+		InventoryComponent->RemoveItem(item);
+		
+	
 
 }
 
@@ -206,6 +210,16 @@ void AMainCharacter::Slot3()
 	UE_LOG(LogTemp, Warning, TEXT("Slot3  is pressed!"));
 	const FInventoryItemData& item = InventoryComponent->GetItemAt(2);
 
+	// Spawn actor
+	FActorSpawnParameters Params;
+	Params.Owner = this;
+	Params.Instigator = GetInstigator();
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
+	InventoryComponent->RemoveItem(item);
+
+
 }
 
 void AMainCharacter::Slot4()
@@ -213,7 +227,14 @@ void AMainCharacter::Slot4()
 	UE_LOG(LogTemp, Warning, TEXT("Slot4  is pressed!"));
 	const FInventoryItemData& item = InventoryComponent->GetItemAt(3);
 
+	// Spawn actor
+	FActorSpawnParameters Params;
+	Params.Owner = this;
+	Params.Instigator = GetInstigator();
+	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
+	GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
+	InventoryComponent->RemoveItem(item);
 
 
 	
