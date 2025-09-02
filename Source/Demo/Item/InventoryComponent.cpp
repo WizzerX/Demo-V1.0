@@ -10,8 +10,11 @@ UInventoryComponent::UInventoryComponent()
 {
 	
 	PrimaryComponentTick.bCanEverTick = true;
-	Inventory.SetNum(4,false);
+	//Inventory.SetNum(4);
 
+
+
+	
 }
 
 
@@ -64,7 +67,7 @@ void UInventoryComponent::RemoveItem(const FInventoryItemData& Item)
 			Inventory[i].Quantity--;
 			if (Inventory[i].Quantity <= 0)
 			{
-				Inventory.RemoveAt(i);
+				Inventory[i] = FInventoryItemData();
 				
 			}
 			break;
