@@ -81,7 +81,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Inventroy, meta = (AllowPrivateAccess = true))
    class	UInventoryComponent* InventoryComponent;
 
-
+   TSubclassOf<UUserWidget> SlotHud;
 
 public:
 	bool bCrouch = false;

@@ -6,6 +6,7 @@
 #include "Demo/Item/BaseInteractable.h"
 #include "PickupableItem.generated.h"
 
+
 USTRUCT(BlueprintType)
 struct FInventoryItemData
 {
@@ -24,7 +25,7 @@ public:
 	int	Quantity;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
-	UTexture2D* Icon = nullptr;
+	class UTexture2D* Icon = nullptr;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
 	int Weight;

@@ -17,6 +17,9 @@
 #include "Demo/Item/PickupableItem.h"
 #include "Demo/Item/InventoryComponent.h"
 #include "string"
+#include "Components/Widget.h"
+#include "Widget/SlotWidget.h"
+#include "Demo/Charcter/MainCharacterController.h"
 AMainCharacter::AMainCharacter()
 {
  	
@@ -182,9 +185,11 @@ void AMainCharacter::Slot1()
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 		GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
-
 		InventoryComponent->RemoveItem(item);
-		
+	
+
+
+
 	
 
 }
@@ -201,8 +206,11 @@ const FInventoryItemData& item = InventoryComponent->GetItemAt(1);
 	Params.Instigator = GetInstigator();
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
-InventoryComponent->RemoveItem(item);
+	GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
+	InventoryComponent->RemoveItem(item);
+
+
+
 }
 
 void AMainCharacter::Slot3()
@@ -383,10 +391,25 @@ void  AMainCharacter::Pickup()
 		{
 			
 			InventoryComponent->AddItem(CurrentItem->ItemData);
+			
+			AMainCharacterController* MyPC = Cast<AMainCharacterController>(GetController());
+
+			USlotWidget* SlotWidget = Cast<USlotWidget>(MyPC->QuickSlotWidget);
+
+			if (SlotWidget)
+			{
+				SlotWidget->UpdatUI(CurrentItem->ItemData.Icon, CurrentItem->ItemData.Quantity);
+				UE_LOG(LogTemp, Warning,TEXT("Caked Cut"));
+			}													
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Widget Cast Failed!"));
+			}
+
+
 			CurrentItem->Destroy();
 			
-			//CurrentItem->GetMesh()->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale);
-			//CurrentItem->SetItemState(EItemState::EIS_Equipped);
+
 
 
 		}

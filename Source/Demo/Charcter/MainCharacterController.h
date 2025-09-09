@@ -17,8 +17,20 @@ class DEMO_API AMainCharacterController : public APlayerController
 
 protected:
 	
+	virtual void BeginPlay() override;
+
+
 
 public:
 	AMainCharacterController();
-	
+
+	UPROPERTY()
+class	UUserWidget* QuickSlotWidget;
+
+	UPROPERTY(EditAnywhere, Category = "UI")
+	TSubclassOf<UUserWidget> QuickSlotClass;
+
+
+
+
 };

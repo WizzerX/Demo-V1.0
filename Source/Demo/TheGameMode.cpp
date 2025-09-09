@@ -2,4 +2,44 @@
 
 
 #include "TheGameMode.h"
+#include "Components/Widget.h"
+#include "Blueprint/UserWidget.h"
+#include "Demo/Charcter/MainCharacterController.h"
+ATheGameMode::ATheGameMode()
+{
 
+
+
+}
+
+void ATheGameMode::ChangeWidget(TSubclassOf<UUserWidget> NewWidget)
+{
+	if (CurrentWidget)
+	{
+		CurrentWidget->RemoveFromViewport();
+		CurrentWidget = nullptr;
+	}
+	if (NewWidget)
+	{
+		CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), NewWidget);
+		if (CurrentWidget)
+		{
+			CurrentWidget->AddToViewport();
+		}
+
+
+
+	}
+
+
+}
+
+void ATheGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	
+	GEngine->AddOnScreenDebugMessage(2, 4, FColor::Green, FString("THE GAME MODE BEGIN PLAY"));
+
+
+}
