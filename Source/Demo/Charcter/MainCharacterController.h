@@ -24,13 +24,12 @@ protected:
 public:
 	AMainCharacterController();
 
-	UPROPERTY()
-class	UUserWidget* QuickSlotWidget;
+
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UUserWidget> QuickSlotClass;
 
-
+class	UQuickSlotWidget* SlotWidget;
 
 
 };

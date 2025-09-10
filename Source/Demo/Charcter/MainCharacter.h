@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+
 #include "MainCharacter.generated.h"
+
 
 UCLASS()
 class DEMO_API AMainCharacter : public ACharacter
@@ -81,7 +83,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Inventroy, meta = (AllowPrivateAccess = true))
    class	UInventoryComponent* InventoryComponent;
 
-   TSubclassOf<UUserWidget> SlotHud;
+ 
 
 public:
 	bool bCrouch = false;

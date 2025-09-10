@@ -18,7 +18,7 @@
 #include "Demo/Item/InventoryComponent.h"
 #include "string"
 #include "Components/Widget.h"
-#include "Widget/SlotWidget.h"
+#include "Widget/QuickSlotWidget.h"
 #include "Demo/Charcter/MainCharacterController.h"
 AMainCharacter::AMainCharacter()
 {
@@ -394,16 +394,16 @@ void  AMainCharacter::Pickup()
 			
 			AMainCharacterController* MyPC = Cast<AMainCharacterController>(GetController());
 
-			USlotWidget* SlotWidget = Cast<USlotWidget>(MyPC->QuickSlotWidget);
-
-			if (SlotWidget)
+			UQuickSlotWidget* Widget = Cast<UQuickSlotWidget>(MyPC->SlotWidget);
+			if (Widget)
 			{
-				SlotWidget->UpdatUI(CurrentItem->ItemData.Icon, CurrentItem->ItemData.Quantity);
-				UE_LOG(LogTemp, Warning,TEXT("Caked Cut"));
-			}													
+				Widget->UpdateUI(CurrentItem->ItemData.Icon, CurrentItem->ItemData.Quantity);
+				UE_LOG(LogTemp, Error, TEXT("Widget Scucess"));
+
+			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Widget Cast Failed!"));
+				UE_LOG(LogTemp, Error, TEXT("Cast Failed!"));
 			}
 
 

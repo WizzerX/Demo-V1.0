@@ -5,8 +5,14 @@
 #include "Components/Widget.h"
 #include "Blueprint/UserWidget.h"
 #include "Demo/Charcter/MainCharacterController.h"
+#include "Demo/Charcter/MainCharacter.h"
 ATheGameMode::ATheGameMode()
 {
+	
+		DefaultPawnClass = AMainCharacter::StaticClass();        // your character
+		PlayerControllerClass = AMainCharacterController::StaticClass(); // your controller
+		                 
+	
 
 
 

@@ -2,27 +2,26 @@
 
 
 #include "../../Demo/Charcter/MainCharacterController.h"
-#include "Widget/SlotWidget.h"
 #include "Components/Widget.h"
+#include "Widget/QuickSlotWidget.h"
 void AMainCharacterController::BeginPlay()
 {
     Super::BeginPlay();
+    SlotWidget = CreateWidget<UQuickSlotWidget>(this, QuickSlotClass);
 
-    if (QuickSlotClass)
+    if (SlotWidget)
     {
-       UUserWidget* widget = CreateWidget<UUserWidget>(this, QuickSlotClass);
-       QuickSlotWidget = widget;
-        if (QuickSlotWidget)
-        {
-            QuickSlotWidget->AddToViewport();
-        }
-    }
+        SlotWidget->AddToViewport();
 
+
+    }
+   
 
 }
 
 AMainCharacterController::AMainCharacterController()
 {
+ 
 
 
 }
