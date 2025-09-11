@@ -42,6 +42,7 @@ void UInventoryComponent::AddItem(const FInventoryItemData& Item)
 			{
 				Inventory.Add(Item);
 				UE_LOG(LogTemp, Error, TEXT("Inventory Item Added!"));
+				
 			}
 			break;
 
@@ -50,6 +51,7 @@ void UInventoryComponent::AddItem(const FInventoryItemData& Item)
 	}
 	if (!bItemFound)
 	{
+		Index++;
 		Inventory.Add(Item);
 		UE_LOG(LogTemp, Error, TEXT("Inventory Item Added!"));
 
@@ -68,7 +70,7 @@ void UInventoryComponent::RemoveItem(const FInventoryItemData& Item)
 			if (Inventory[i].Quantity <= 0)
 			{
 				Inventory[i] = FInventoryItemData();
-				
+				Index--;
 			}
 			break;
 		}

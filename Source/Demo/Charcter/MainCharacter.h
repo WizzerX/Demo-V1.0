@@ -83,7 +83,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Inventroy, meta = (AllowPrivateAccess = true))
    class	UInventoryComponent* InventoryComponent;
 
- 
+   int32 count = 0;
+	
 
 public:
 	bool bCrouch = false;

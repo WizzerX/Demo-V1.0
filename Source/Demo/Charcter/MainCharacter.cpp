@@ -18,7 +18,8 @@
 #include "Demo/Item/InventoryComponent.h"
 #include "string"
 #include "Components/Widget.h"
-#include "Widget/QuickSlotWidget.h"
+#include "Widget/MainWidget.h"
+#include "Widget/QuickSlotBarWidget.h"
 #include "Demo/Charcter/MainCharacterController.h"
 AMainCharacter::AMainCharacter()
 {
@@ -394,11 +395,14 @@ void  AMainCharacter::Pickup()
 			
 			AMainCharacterController* MyPC = Cast<AMainCharacterController>(GetController());
 
-			UQuickSlotWidget* Widget = Cast<UQuickSlotWidget>(MyPC->SlotWidget);
+			UMainWidget* Widget = Cast<UMainWidget>(MyPC->SlotWidget);
 			if (Widget)
 			{
-				Widget->UpdateUI(CurrentItem->ItemData.Icon, CurrentItem->ItemData.Quantity);
-				UE_LOG(LogTemp, Error, TEXT("Widget Scucess"));
+				
+				Widget->QuickSlotBar->UpdateUIAt(count, CurrentItem->ItemData.Icon, CurrentItem->ItemData.Quantity);
+				count++;
+				//Widget->UpdateUIAt(0,CurrentItem->ItemData.Icon, CurrentItem->ItemData.Quantity);
+				//UE_LOG(LogTemp, Error, TEXT("Widget Scucess"));
 
 			}
 			else

@@ -29,7 +29,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UUserWidget> QuickSlotClass;
 
-class	UQuickSlotWidget* SlotWidget;
+class	UMainWidget* SlotWidget;
 
 
 };

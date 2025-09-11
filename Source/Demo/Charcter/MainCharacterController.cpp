@@ -3,11 +3,11 @@
 
 #include "../../Demo/Charcter/MainCharacterController.h"
 #include "Components/Widget.h"
-#include "Widget/QuickSlotWidget.h"
+#include "Widget/MainWidget.h"
 void AMainCharacterController::BeginPlay()
 {
     Super::BeginPlay();
-    SlotWidget = CreateWidget<UQuickSlotWidget>(this, QuickSlotClass);
+    SlotWidget = CreateWidget<UMainWidget>(this, QuickSlotClass);
 
     if (SlotWidget)
     {

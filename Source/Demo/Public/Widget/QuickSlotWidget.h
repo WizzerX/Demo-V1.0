@@ -18,12 +18,21 @@ class DEMO_API UQuickSlotWidget : public UUserWidget
 public:
 
 	UPROPERTY(meta = (BindWidget))
+	class USizeBox* SizeBox;
+
+	UPROPERTY(meta = (BindWidget))
+	class UOverlay* Layer;
+
+
+	UPROPERTY(meta = (BindWidget))
 	class UImage* ItemIcon;
 
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* QuantityText;
 
 	void UpdateUI(UTexture2D* Icon, int32 Quantity);
+	
 
+	virtual void NativeConstruct() override;
 	
 };

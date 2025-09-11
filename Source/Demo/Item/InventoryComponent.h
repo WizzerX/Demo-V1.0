@@ -28,7 +28,7 @@ public:
 	bool bItemFound = false;
 
 protected:
-	
+	int32 Index = 0;
 	
 
 	virtual void BeginPlay() override;
@@ -39,6 +39,7 @@ public:
 		ThisTickFunction) override;
 	FInventoryItemData GetItemAt( const int32 index);
 
+	const int32 GetIndex() { return  Index; }
 	
 	void AddItem( const FInventoryItemData& Item);
 
