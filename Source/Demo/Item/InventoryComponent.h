@@ -7,6 +7,10 @@
 #include "Demo/Item/PickupableItem.h"
 #include "InventoryComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSlotWidgetDelegate, int32, UI_Index, const FInventoryItemData&, Data);
+
+
+
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DEMO_API UInventoryComponent : public UActorComponent
@@ -28,7 +32,7 @@ public:
 	bool bItemFound = false;
 
 protected:
-	int32 Index = 0;
+	int32 Index = -1;
 	
 
 	virtual void BeginPlay() override;
@@ -45,4 +49,10 @@ public:
 
 	void RemoveItem(const FInventoryItemData& Item);
 	
+	UPROPERTY(BlueprintAssignable)
+	FSlotWidgetDelegate SlotWidgetDelegate;
+
+	UFUNCTION()
+	void HandlySlotUI(int32 UI_Index, const FInventoryItemData& Data);
+
 };

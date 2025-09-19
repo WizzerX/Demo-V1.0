@@ -5,6 +5,11 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Components/SizeBox.h"
+#include "Demo/Item/PickupableItem.h"
+#include "Demo/Charcter/MainCharacter.h"
+#include "Demo/Item/InventoryComponent.h"
+#include "Demo/Item/InventoryComponent.h"
+
 
 void UQuickSlotWidget::UpdateUI(UTexture2D* Icon, int32 Quantity)
 {
@@ -13,9 +18,18 @@ void UQuickSlotWidget::UpdateUI(UTexture2D* Icon, int32 Quantity)
 		ItemIcon->SetBrushFromTexture(Icon);
 		ItemIcon->SetVisibility(ESlateVisibility::Visible);
 		QuantityText->SetText(FText::AsNumber(Quantity));
-		QuantityText->SetVisibility(ESlateVisibility::Visible);
+		QuantityText->SetVisibility(ESlateVisibility::Visible);	
+		
 	}
 
+
+
+}
+
+void UQuickSlotWidget::AddQuantity(int32 Number)
+{
+	
+	QuantityText->SetText(FText());
 
 
 }
@@ -25,9 +39,10 @@ void UQuickSlotWidget::NativeConstruct()
 	Super::NativeConstruct();
 
 	
-
-
+	
 
 
 
 }
+
+

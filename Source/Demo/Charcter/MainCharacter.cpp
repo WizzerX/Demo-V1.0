@@ -36,7 +36,7 @@ AMainCharacter::AMainCharacter()
 	
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
 	
-
+	
 }
 
 
@@ -399,10 +399,13 @@ void  AMainCharacter::Pickup()
 			if (Widget)
 			{
 				
-				Widget->QuickSlotBar->UpdateUIAt(count, CurrentItem->ItemData.Icon, CurrentItem->ItemData.Quantity);
-				count++;
+				//Widget->QuickSlotBar->SlotWidgetDelegate.Broadcast(InventoryComponent->GetIndex(), CurrentItem->ItemData);
+				Widget->QuickSlotBar->TestDelegate.Broadcast(50);
+				size_t g = InventoryComponent->GetIndex();
+				InventoryComponent->SlotWidgetDelegate.Broadcast(InventoryComponent->GetIndex(), CurrentItem->ItemData);
+				UE_LOG(LogTemp, Warning, TEXT("Inventorycomponent INDEX %d"), g);
 				//Widget->UpdateUIAt(0,CurrentItem->ItemData.Icon, CurrentItem->ItemData.Quantity);
-				//UE_LOG(LogTemp, Error, TEXT("Widget Scucess"));
+				UE_LOG(LogTemp, Error, TEXT("Widget Scucess"));
 
 			}
 			else

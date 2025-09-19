@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "QuickSlotWidget.generated.h"
 
+
+
 /**
  * 
  */
@@ -32,7 +34,9 @@ public:
 
 	void UpdateUI(UTexture2D* Icon, int32 Quantity);
 	
+	void AddQuantity(int32 Number);
 
 	virtual void NativeConstruct() override;
+	
 	
 };

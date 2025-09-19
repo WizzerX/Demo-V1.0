@@ -1,8 +1,6 @@
 #include "Demo/Item/InventoryComponent.h"
 #include "string"
 #include "Demo/Item/PickupableItem.h"
-#include "array"
-
 
 
 
@@ -11,6 +9,11 @@ UInventoryComponent::UInventoryComponent()
 	
 	PrimaryComponentTick.bCanEverTick = true;
 	//Inventory.SetNum(4);
+
+	
+
+
+
 
 
 
@@ -28,20 +31,24 @@ void UInventoryComponent::AddItem(const FInventoryItemData& Item)
 {
 	bItemFound = false;
 
-	for (int i = 0; i < Inventory.Num(); i++)
+	for (int i = 0; i < slot.Num(); i++)
 	{
-		if (Item.ItemName == Inventory[i].ItemName)
+		if (Item.ItemName == slot[i].ItemName)
 		{
 			bItemFound = true;
-			if (Inventory[i].Quantity< 5)
+			if (slot[i].Quantity< 5)
 			{
-				Inventory[i].Quantity++;
+				slot[i].Quantity +=Item.Quantity;
+				SlotWidgetDelegate.Broadcast(i, slot[i]);
+		
 				UE_LOG(LogTemp, Error, TEXT("Quantity Item Added!"));
 			}
 			else
 			{
-				Inventory.Add(Item);
-				UE_LOG(LogTemp, Error, TEXT("Inventory Item Added!"));
+				Index++;
+				slot.Add(Item);
+				SlotWidgetDelegate.Broadcast(i, slot[i]);
+				UE_LOG(LogTemp, Error, TEXT("Slot Item Added!"));
 				
 			}
 			break;
@@ -52,9 +59,9 @@ void UInventoryComponent::AddItem(const FInventoryItemData& Item)
 	if (!bItemFound)
 	{
 		Index++;
-		Inventory.Add(Item);
-		UE_LOG(LogTemp, Error, TEXT("Inventory Item Added!"));
-
+		slot.Add(Item);
+		SlotWidgetDelegate.Broadcast(Index, slot[Index]);
+		UE_LOG(LogTemp, Error, TEXT("Slot Item Added!"));
 	}
 
 
@@ -62,14 +69,14 @@ void UInventoryComponent::AddItem(const FInventoryItemData& Item)
 
 void UInventoryComponent::RemoveItem(const FInventoryItemData& Item)
 {
-	for (int i = 0; i < Inventory.Num();i++)
+	for (int i = 0; i < slot.Num();i++)
 	{
-		if (Inventory[i].ItemName == Item.ItemName)
+		if (slot[i].ItemName == Item.ItemName)
 		{
 			Inventory[i].Quantity--;
 			if (Inventory[i].Quantity <= 0)
 			{
-				Inventory[i] = FInventoryItemData();
+				slot[i] = FInventoryItemData();
 				Index--;
 			}
 			break;
@@ -79,11 +86,21 @@ void UInventoryComponent::RemoveItem(const FInventoryItemData& Item)
 
 }
 
+void UInventoryComponent::HandlySlotUI(int32 UI_Index,const FInventoryItemData& Data)
+{
+
+	UE_LOG(LogTemp, Error, TEXT("Handly slot UI"));
+
+
+
+
+}
+
 void UInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
+	SlotWidgetDelegate.AddDynamic(this, &UInventoryComponent::HandlySlotUI);
 	
 }
 
@@ -98,9 +115,9 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 FInventoryItemData UInventoryComponent::GetItemAt( const int32 index)
 {
-	if (Inventory.IsValidIndex(index))
+	if (slot.IsValidIndex(index))
 	{
-		return  Inventory[index];
+		return  slot[index];
 	}
 	else
 	{
@@ -113,4 +130,5 @@ FInventoryItemData UInventoryComponent::GetItemAt( const int32 index)
 	}
 
 }
+
 

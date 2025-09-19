@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Widget/QuickSlotWidget.h"
+#include "Demo/Item/PickupableItem.h"
 #include "QuickSlotBarWidget.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTestDelegate, int32, score);
 
 /**
  * 
@@ -20,8 +22,8 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class	UUniformGridPanel* Grid;
 
-
-
+	UPROPERTY()
+	UQuickSlotWidget* QuickSlotWidget;
 
 	
 	
@@ -33,15 +35,29 @@ public:
 	TSubclassOf<UQuickSlotWidget>QuickSlotClass;
 
 
-	UPROPERTY()
-	UQuickSlotWidget* QuickSlotWidget;
+
 
 	virtual void NativeConstruct() override;
 
 	void AddWidget();
 
-	void UpdateUIAt(int32 index, UTexture2D* icon, int32 Quantity);
+	class AMainCharacter* CharacterRef;
+
+	UFUNCTION()
+	void UpdateUIAt(int32 index,const FInventoryItemData& Data);
+
+	
 
 
 	
+
+	FTestDelegate TestDelegate;
+
+
+
+
+
+
+	UFUNCTION()
+	void ChangeScore(int32 score);
 };

@@ -4,20 +4,18 @@
 #include "Widget/QuickSlotBarWidget.h"
 #include "Components/Widget.h"
 #include "Widget/QuickSlotWidget.h"
-#include "Components/PanelWidget.h" 
-#include <iostream>
-#include "Components/UniformGridPanel.h"
-#include "Components/SizeBox.h"
+#include "Components/UniformGridPanel.h" 
+#include "Demo/Charcter/MainCharacter.h"
+#include "Demo/Item/InventoryComponent.h"
+#include "Components/TextBlock.h"
+#include "Demo/Item/PickupableItem.h"
+#include "Demo/Public/Widget/QuickSlotWidget.h"
 
 void UQuickSlotBarWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
 	SlotBar.Empty();
-
-	
-
-
 
 	for (size_t i = 0; i < 4; i++)
 	{
@@ -27,21 +25,26 @@ void UQuickSlotBarWidget::NativeConstruct()
 		SlotBar.Add(QuickSlotWidget);
 		if (Grid)
 		{
-			
 			Grid->AddChildToUniformGrid(QuickSlotWidget, 0, i);
-			
-			
 		}
 
 
+	}
 
 
+	TestDelegate.AddDynamic(this, &UQuickSlotBarWidget::ChangeScore);
+	CharacterRef = Cast<AMainCharacter>(GetOwningPlayerPawn());
+	if (CharacterRef)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Delegate binding success"));
+		CharacterRef->InventoryComponent->SlotWidgetDelegate.AddDynamic(
+			this, &UQuickSlotBarWidget::UpdateUIAt
+		);
 		
-		
-
-
-
-
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Delegate binding fAILED"));
 	}
 
 
@@ -55,17 +58,27 @@ void UQuickSlotBarWidget::AddWidget()
 
 }
 
-void UQuickSlotBarWidget::UpdateUIAt(int32 index, UTexture2D* icon, int32 Quantity)
+void UQuickSlotBarWidget::UpdateUIAt(int32 index,const FInventoryItemData& Data)
 {
-	if (SlotBar.IsValidIndex(index)&& icon && Quantity)
+	
+	
+
+	if (SlotBar.IsValidIndex(index))
 	{
-		SlotBar[index]->UpdateUI(icon, Quantity);
-		UE_LOG(LogTemp, Log, TEXT("Update UI Sucess!: %d" ),index);
-		
+		SlotBar[index]->UpdateUI(Data.Icon,Data.Quantity);
+		UE_LOG(LogTemp, Warning, TEXT("INDEX UPDATE UI:%d"), index);
+
 	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Update UI Failed!"));
-	}
+
+
+	
+}
+
+
+void UQuickSlotBarWidget::ChangeScore(int32 score)
+{
+
+
+	UE_LOG(LogTemp,Error, TEXT("INDEX UPDATE UI:%d"),score);
 
 }
