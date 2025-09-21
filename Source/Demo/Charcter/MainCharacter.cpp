@@ -176,7 +176,7 @@ void AMainCharacter::Slot1()
 	UE_LOG(LogTemp, Warning, TEXT("Slot1 is pressed!"));
 
 	
-		const	FInventoryItemData& item = InventoryComponent->GetItemAt(0);
+const		FInventoryItemData& item = InventoryComponent->GetItemAt(0);
 
 
 		// Spawn actor
@@ -184,15 +184,11 @@ void AMainCharacter::Slot1()
 		Params.Owner = this;
 		Params.Instigator = GetInstigator();
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-		GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
-		InventoryComponent->RemoveItem(item);
-	
-
-
-
-	
-
+		if (item.Quantity != 0)
+		{
+			GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
+			InventoryComponent->RemoveItem(item);
+		}
 }
 
 void AMainCharacter::Slot2()
@@ -393,29 +389,11 @@ void  AMainCharacter::Pickup()
 			
 			InventoryComponent->AddItem(CurrentItem->ItemData);
 			
-			AMainCharacterController* MyPC = Cast<AMainCharacterController>(GetController());
-
-			UMainWidget* Widget = Cast<UMainWidget>(MyPC->SlotWidget);
-			if (Widget)
-			{
-				
-				//Widget->QuickSlotBar->SlotWidgetDelegate.Broadcast(InventoryComponent->GetIndex(), CurrentItem->ItemData);
-				Widget->QuickSlotBar->TestDelegate.Broadcast(50);
-				size_t g = InventoryComponent->GetIndex();
-				InventoryComponent->SlotWidgetDelegate.Broadcast(InventoryComponent->GetIndex(), CurrentItem->ItemData);
-				UE_LOG(LogTemp, Warning, TEXT("Inventorycomponent INDEX %d"), g);
-				//Widget->UpdateUIAt(0,CurrentItem->ItemData.Icon, CurrentItem->ItemData.Quantity);
-				UE_LOG(LogTemp, Error, TEXT("Widget Scucess"));
-
-			}
-			else
-			{
-				UE_LOG(LogTemp, Error, TEXT("Cast Failed!"));
-			}
-
-
-			CurrentItem->Destroy();
+		
+		
 			
+		
+			UE_LOG(LogTemp, Error, TEXT("-------------------------------------------------"));
 
 
 

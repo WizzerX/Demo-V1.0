@@ -19,7 +19,7 @@ class DEMO_API UInventoryComponent : public UActorComponent
 
 public:	
 
-	UInventoryComponent();
+	
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TArray<FInventoryItemData>Inventory;
@@ -32,7 +32,7 @@ public:
 	bool bItemFound = false;
 
 protected:
-	int32 Index = -1;
+	int32 Index = 0;
 	
 
 	virtual void BeginPlay() override;
@@ -45,6 +45,8 @@ public:
 
 	const int32 GetIndex() { return  Index; }
 	
+	UInventoryComponent();
+
 	void AddItem( const FInventoryItemData& Item);
 
 	void RemoveItem(const FInventoryItemData& Item);
@@ -54,5 +56,15 @@ public:
 
 	UFUNCTION()
 	void HandlySlotUI(int32 UI_Index, const FInventoryItemData& Data);
+
+
+	AMainCharacter* CharacterRef;
+
+	int32 NewIndex;
+
+private:
+	int SlotLeft = 4;
+
+
 
 };

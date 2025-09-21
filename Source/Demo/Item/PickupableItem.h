@@ -13,7 +13,7 @@ struct FInventoryItemData
 	GENERATED_BODY()
 
 public:
-	FInventoryItemData();
+	
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
 	FName ItemName;
@@ -28,11 +28,17 @@ public:
 	class UTexture2D* Icon = nullptr;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
-	int Weight;
+	bool stackable = false;
 
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
 	TSubclassOf<APickupableItem>ItemActorClass;
+
+	FInventoryItemData() :
+		ItemName(""),
+		Quantity(0),
+		Icon(nullptr)
+	{}
 
 };
 
@@ -64,6 +70,7 @@ public:
 	APickupableItem();
 	void SetItemState(EItemState state);
 	virtual bool IsPickable()const { return true; }
+
 protected:
 	
 

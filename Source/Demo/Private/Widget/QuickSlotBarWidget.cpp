@@ -10,7 +10,7 @@
 #include "Components/TextBlock.h"
 #include "Demo/Item/PickupableItem.h"
 #include "Demo/Public/Widget/QuickSlotWidget.h"
-
+#include "Components/Image.h"
 void UQuickSlotBarWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -38,8 +38,7 @@ void UQuickSlotBarWidget::NativeConstruct()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Delegate binding success"));
 		CharacterRef->InventoryComponent->SlotWidgetDelegate.AddDynamic(
-			this, &UQuickSlotBarWidget::UpdateUIAt
-		);
+			this, &UQuickSlotBarWidget::UpdateUIAt);
 		
 	}
 	else
@@ -65,9 +64,29 @@ void UQuickSlotBarWidget::UpdateUIAt(int32 index,const FInventoryItemData& Data)
 
 	if (SlotBar.IsValidIndex(index))
 	{
-		SlotBar[index]->UpdateUI(Data.Icon,Data.Quantity);
 		UE_LOG(LogTemp, Warning, TEXT("INDEX UPDATE UI:%d"), index);
+		
+		if (Data.Quantity <= 0)
+		{
+		SlotBar[index]->QuantityText->SetText(FText::AsNumber(0));
+		SlotBar[index]->ItemIcon->SetBrushFromTexture(nullptr);
+		SlotBar[index]->ItemIcon->SetVisibility(ESlateVisibility::Hidden);
+		SlotBar[index]->QuantityText->SetText(FText::GetEmpty());
+		SlotBar[index]->QuantityText->SetVisibility(ESlateVisibility::Visible);
+		UE_LOG(LogTemp, Warning, TEXT("Deleate the slot"), index);
+		
+			
+		}
 
+
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Slot Updated success !"), index);
+			SlotBar[index]->ItemIcon->SetBrushFromTexture(Data.Icon);
+			SlotBar[index]->ItemIcon->SetVisibility(ESlateVisibility::Visible);
+			SlotBar[index]->QuantityText->SetText(FText::AsNumber(Data.Quantity));
+			SlotBar[index]->QuantityText->SetVisibility(ESlateVisibility::Visible);
+		}
 	}
 
 

@@ -173,7 +173,7 @@ void APickupableItem::Interact(AMainCharacter* Character)
 	GEngine->AddOnScreenDebugMessage(23, 4, FColor::Purple, FString("PURE FUNCTION IS CALLED"));
 	
 
-	UE_LOG(LogTemp, Warning, TEXT("PURE IS CALLLED"));
+	
 }
 
 
@@ -185,9 +185,4 @@ void APickupableItem::SetItemState(EItemState State)
 
 }
 
-FInventoryItemData::FInventoryItemData()
-{
 
-
-
-}
