@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Item/PickupableItem.h"
+#include "Item/Interactable/PickupableItem.h"
 #include "Consumble.generated.h"
 
 /**

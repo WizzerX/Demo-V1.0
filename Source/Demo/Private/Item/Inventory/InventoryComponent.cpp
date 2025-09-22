@@ -1,6 +1,6 @@
-#include "Item/InventoryComponent.h"
+#include "Item/Inventory/InventoryComponent.h"
 #include "string"
-#include "Item/PickupableItem.h"
+#include "Item/Interactable/PickupableItem.h"
 #include "character/MainCharacter.h"
 
 

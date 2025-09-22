@@ -14,8 +14,8 @@
 #include <Kismet/GameplayStatics.h>
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
-#include "Item/PickupableItem.h"
-#include "Item/InventoryComponent.h"
+#include "Item/Interactable/PickupableItem.h"
+#include "Item/Inventory/InventoryComponent.h"
 #include "string"
 #include "Components/Widget.h"
 #include "Widget/MainWidget.h"

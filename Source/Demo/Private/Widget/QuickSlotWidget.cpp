@@ -5,10 +5,10 @@
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Components/SizeBox.h"
-#include "Item/PickupableItem.h"
+#include "Item/Interactable/PickupableItem.h"
 #include "character/MainCharacter.h"
-#include "Item/InventoryComponent.h"
-#include "Item/InventoryComponent.h"
+#include "Item/Inventory/InventoryComponent.h"
+#include "Item/Inventory/InventoryComponent.h"
 
 
 void UQuickSlotWidget::UpdateUI(UTexture2D* Icon, int32 Quantity)

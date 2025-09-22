@@ -1,12 +1,12 @@
-#include "Item/PickupableItem.h"
+#include "Item/Interactable/PickupableItem.h"
 #include "character/MainCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/BoxComponent.h"
-#include "Item/BaseInteractable.h"
+#include "Item/Interactable/BaseInteractable.h"
 #include "character/MainCharacter.h"
-#include "Item/InventoryComponent.h"
+#include "Item/Inventory/InventoryComponent.h"
 APickupableItem::APickupableItem()
 {
 

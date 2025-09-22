@@ -6,9 +6,9 @@
 #include "Widget/QuickSlotWidget.h"
 #include "Components/UniformGridPanel.h" 
 #include "character/MainCharacter.h"
-#include "Item/InventoryComponent.h"
+#include "Item/Inventory/InventoryComponent.h"
 #include "Components/TextBlock.h"
-#include "Item/PickupableItem.h"
+#include "Item/Interactable/PickupableItem.h"
 #include "Demo/Public/Widget/QuickSlotWidget.h"
 #include "Components/Image.h"
 void UQuickSlotBarWidget::NativeConstruct()
