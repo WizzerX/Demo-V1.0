@@ -97,7 +97,7 @@ void UInventoryComponent::RemoveItem(const FInventoryItemData& Item)
 			{
 				slot[index] = FInventoryItemData();
 				SlotWidgetDelegate.Broadcast(index, slot[index]);
-
+				return;
 
 			}
 
