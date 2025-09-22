@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Widget/QuickSlotWidget.h"
-#include "Demo/Item/PickupableItem.h"
+#include "Item/PickupableItem.h"
 #include "QuickSlotBarWidget.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTestDelegate, int32, score);

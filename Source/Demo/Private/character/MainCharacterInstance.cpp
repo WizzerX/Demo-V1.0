@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MainCharacterInstance.h"
-#include  "../../Demo/Charcter/MainCharacter.h"
+#include "character/MainCharacterInstance.h"
+#include  "character/MainCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Pawn.h"
 

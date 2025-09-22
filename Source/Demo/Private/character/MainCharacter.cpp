@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Demo/Charcter/MainCharacter.h"
+#include "character/MainCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Controller.h"
@@ -14,13 +14,13 @@
 #include <Kismet/GameplayStatics.h>
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
-#include "Demo/Item/PickupableItem.h"
-#include "Demo/Item/InventoryComponent.h"
+#include "Item/PickupableItem.h"
+#include "Item/InventoryComponent.h"
 #include "string"
 #include "Components/Widget.h"
 #include "Widget/MainWidget.h"
 #include "Widget/QuickSlotBarWidget.h"
-#include "Demo/Charcter/MainCharacterController.h"
+#include "character/MainCharacterController.h"
 AMainCharacter::AMainCharacter()
 {
  	

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Demo/Item/PickupableItem.h"
+#include "Item/PickupableItem.h"
 #include "InventoryComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSlotWidgetDelegate, int32, UI_Index, const FInventoryItemData&, Data);

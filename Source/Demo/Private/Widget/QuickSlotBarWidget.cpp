@@ -5,10 +5,10 @@
 #include "Components/Widget.h"
 #include "Widget/QuickSlotWidget.h"
 #include "Components/UniformGridPanel.h" 
-#include "Demo/Charcter/MainCharacter.h"
-#include "Demo/Item/InventoryComponent.h"
+#include "character/MainCharacter.h"
+#include "Item/InventoryComponent.h"
 #include "Components/TextBlock.h"
-#include "Demo/Item/PickupableItem.h"
+#include "Item/PickupableItem.h"
 #include "Demo/Public/Widget/QuickSlotWidget.h"
 #include "Components/Image.h"
 void UQuickSlotBarWidget::NativeConstruct()

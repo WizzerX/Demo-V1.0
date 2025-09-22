@@ -1,11 +1,11 @@
 	// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Demo/Item/BaseInteractable.h"
+#include "Item/BaseInteractable.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
-#include  "Demo/Charcter/MainCharacter.h"
+#include  "character/MainCharacter.h"
 #include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
 

@@ -1,7 +1,7 @@
-#include "Demo/Item/InventoryComponent.h"
+#include "Item/InventoryComponent.h"
 #include "string"
-#include "Demo/Item/PickupableItem.h"
-#include "Demo/Charcter/MainCharacter.h"
+#include "Item/PickupableItem.h"
+#include "character/MainCharacter.h"
 
 
 UInventoryComponent::UInventoryComponent()
@@ -45,6 +45,7 @@ void UInventoryComponent::AddItem(const FInventoryItemData& Item)
 			SlotWidgetDelegate.Broadcast(i, slot[i]);
 			UE_LOG(LogTemp, Error, TEXT("Quantity Added to the slot:"));
 			CharacterRef->CurrentItem->Destroy();
+			CharacterRef->CurrentItem = nullptr;
 			return;
 
 
@@ -84,23 +85,24 @@ void UInventoryComponent::AddItem(const FInventoryItemData& Item)
 
 void UInventoryComponent::RemoveItem(const FInventoryItemData& Item)
 {
-	for (int i = 0; i < slot.Num();i++)
+	for (int index = 0; index < slot.Num(); index++)
 	{
-		if (slot[i].ItemName == Item.ItemName)
+
+		if (slot[index].ItemName == Item.ItemName)
 		{
-			slot[i].Quantity--;
-			
-			SlotWidgetDelegate.Broadcast(i, slot[i]);
-			if (slot[i].Quantity <= 0)
+			slot[index].Quantity--;
+
+			SlotWidgetDelegate.Broadcast(index, slot[index]);
+			if (slot[index].Quantity <= 0)
 			{
-				slot[i] = FInventoryItemData();
-				SlotWidgetDelegate.Broadcast(i,slot[i]);
-				
-				break;
+				slot[index] = FInventoryItemData();
+				SlotWidgetDelegate.Broadcast(index, slot[index]);
+
+
 			}
-			
+
 		}
-		
+
 	}
 
 }

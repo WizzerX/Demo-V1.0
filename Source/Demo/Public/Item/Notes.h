@@ -3,15 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Demo/Item/BaseInteractable.h"
-#include "Door.generated.h"
+#include "Item/PickupableItem.h"
+#include "Notes.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class DEMO_API ADoor : public ABaseInteractable
+class DEMO_API ANotes : public APickupableItem
 {
 	GENERATED_BODY()
+
+
 	
 };

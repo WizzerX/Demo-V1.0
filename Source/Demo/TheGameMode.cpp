@@ -4,8 +4,8 @@
 #include "TheGameMode.h"
 #include "Components/Widget.h"
 #include "Blueprint/UserWidget.h"
-#include "Demo/Charcter/MainCharacterController.h"
-#include "Demo/Charcter/MainCharacter.h"
+#include "character/MainCharacterController.h"
+#include "character/MainCharacter.h"
 ATheGameMode::ATheGameMode()
 {
 	

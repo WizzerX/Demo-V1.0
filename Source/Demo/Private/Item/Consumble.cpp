@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Demo/Item/Consumble.h"
+#include "Item/Consumble.h"
 
 
 void AConsumble::Interact(AMainCharacter* Character)

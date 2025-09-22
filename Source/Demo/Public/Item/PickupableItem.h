@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Demo/Item/BaseInteractable.h"
+#include "BaseInteractable.h"
 #include "PickupableItem.generated.h"
 
 
@@ -107,6 +107,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FInventoryItemData ItemData;
+
+
 
 
 };
