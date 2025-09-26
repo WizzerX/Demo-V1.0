@@ -14,6 +14,24 @@ class DEMO_API ANotes : public APickupableItem
 {
 	GENERATED_BODY()
 
+private:
 
+	ANotes();
+
+	virtual bool IsPickable()const { return false; }
+
+	virtual void Interact(AMainCharacter* Character) override;
 	
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "widget")
+	UUserWidget* NoteWidget;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "widget")
+	TSubclassOf<UUserWidget>  NoteWidgetClass;
+
+private:
+
+	void StopReading();
 };

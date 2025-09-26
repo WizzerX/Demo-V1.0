@@ -32,7 +32,8 @@ public:
 	
 	ABaseInteractable();
 
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	class UWidgetComponent* WidgetComponent;
 
 
 protected:
@@ -59,8 +60,7 @@ protected:
 
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	class UWidgetComponent* WidgetComponent;
+	
 
 
 

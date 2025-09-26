@@ -26,3 +26,24 @@ AMainCharacterController::AMainCharacterController()
 
 }
 
+void AMainCharacterController::PlayerReadingNote(UUserWidget* mywidget)
+{
+   
+    FInputModeGameAndUI InputeMode;
+    InputeMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+    InputeMode.SetWidgetToFocus(mywidget->TakeWidget());
+    SetIgnoreMoveInput(true);
+    SetInputMode(InputeMode);
+   
+
+
+}
+
+void AMainCharacterController::PlayerStopReading(UUserWidget* widget)
+{
+    FInputModeGameOnly GameMode;
+    SetInputMode(GameMode);
+    SetIgnoreMoveInput(false);
+    widget->RemoveFromParent();
+}
+

@@ -29,7 +29,7 @@ private:
 public:
 	
 	AMainCharacter();
-
+	bool bIsReading = false;
 protected:
 	
 	virtual void BeginPlay() override;

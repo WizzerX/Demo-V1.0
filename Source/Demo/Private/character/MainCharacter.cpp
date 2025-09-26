@@ -122,27 +122,30 @@ void AMainCharacter::StopCrouch()
 
 void AMainCharacter::Fire()
 {
-	FVector StartLoc = camera->GetComponentLocation();
-	FVector ForwardLoc = camera->GetForwardVector();
-	FVector EndLoc = StartLoc + ForwardLoc *800;
-
-	FHitResult HitResult;
-
-	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(this);
 	
 
-	GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_WorldStatic, Params);
+		FVector StartLoc = camera->GetComponentLocation();
+		FVector ForwardLoc = camera->GetForwardVector();
+		FVector EndLoc = StartLoc + ForwardLoc * 800;
 
-	DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 5.f);
-	/*
-	if (CurrentItem)
-	{
-		CurrentItem->SetItemState(EItemState::EIS_Pickup);
-		
-	}
+		FHitResult HitResult;
+
+		FCollisionQueryParams Params;
+		Params.AddIgnoredActor(this);
+
+
+		GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_WorldStatic, Params);
+
+		DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 5.f);
+		/*
+		if (CurrentItem)
+		{
+			CurrentItem->SetItemState(EItemState::EIS_Pickup);
+
+		}
+
+		*/
 	
-	*/
 }
 
 void AMainCharacter::DropItem()
@@ -153,7 +156,7 @@ void AMainCharacter::DropItem()
 	
 	UE_LOG(LogTemp, Warning, TEXT("Drop THE ITEM"));
 	
-	if (CurrentItem)
+	if (CurrentItem && !bIsReading)
 	{
 		CurrentItem->GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 
@@ -173,10 +176,12 @@ void AMainCharacter::DropItem()
 
 void AMainCharacter::Slot1()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Slot1 is pressed!"));
+	if (!bIsReading)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Slot1 is pressed!"));
 
-	
-const		FInventoryItemData& item = InventoryComponent->GetItemAt(0);
+
+		const	FInventoryItemData& item = InventoryComponent->GetItemAt(0);
 
 
 		// Spawn actor
@@ -189,41 +194,48 @@ const		FInventoryItemData& item = InventoryComponent->GetItemAt(0);
 			GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
 			InventoryComponent->RemoveItem(item);
 		}
+	}
 }
 
 void AMainCharacter::Slot2()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Slot2  is pressed!"));
-const FInventoryItemData& item = InventoryComponent->GetItemAt(1);
+	
+	if (!bIsReading)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Slot2  is pressed!"));
+		const FInventoryItemData& item = InventoryComponent->GetItemAt(1);
 
 
-	// Spawn actor
-	FActorSpawnParameters Params;
-	Params.Owner = this;
-	Params.Instigator = GetInstigator();
-	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		// Spawn actor
+		FActorSpawnParameters Params;
+		Params.Owner = this;
+		Params.Instigator = GetInstigator();
+		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
-	InventoryComponent->RemoveItem(item);
+		GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
+		InventoryComponent->RemoveItem(item);
 
-
+	}
 
 }
 
 void AMainCharacter::Slot3()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Slot3  is pressed!"));
-	const FInventoryItemData& item = InventoryComponent->GetItemAt(2);
+	
+	if (!bIsReading)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Slot3  is pressed!"));
+		const FInventoryItemData& item = InventoryComponent->GetItemAt(2);
 
-	// Spawn actor
-	FActorSpawnParameters Params;
-	Params.Owner = this;
-	Params.Instigator = GetInstigator();
-	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		// Spawn actor
+		FActorSpawnParameters Params;
+		Params.Owner = this;
+		Params.Instigator = GetInstigator();
+		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
-	InventoryComponent->RemoveItem(item);
-
+		GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
+		InventoryComponent->RemoveItem(item);
+	}
 
 }
 
@@ -328,7 +340,7 @@ void AMainCharacter::CurrentTraceItem()
 
 
 
-		if (HitResult.bBlockingHit && Item)
+		if (HitResult.bBlockingHit && Item )
 		{
 			/*
 			if (PickableItem)
@@ -344,8 +356,10 @@ void AMainCharacter::CurrentTraceItem()
 			
 			CurrentItem = PickableItem;
 			
-			CurrentItem->GetWidgetComponent()->SetVisibility(true);
-				
+			if (!bIsReading)
+			{
+				CurrentItem->GetWidgetComponent()->SetVisibility(true);
+			}
 			GEngine->AddOnScreenDebugMessage(23, 4, FColor::Green, FString("Traceing Widget"));
 			GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, FString::Printf(TEXT("Hit Actor: %s"), *HitResult.GetActor()->GetName()));
 		}
@@ -384,7 +398,7 @@ void  AMainCharacter::Pickup()
 	if (CurrentItem) 
 	{
 		CurrentItem->Interact(this);
-		if (CurrentItem->IsPickable())
+		if (CurrentItem->IsPickable()==true)
 		{
 			
 			InventoryComponent->AddItem(CurrentItem->ItemData);

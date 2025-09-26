@@ -31,5 +31,7 @@ public:
 
 class	UMainWidget* SlotWidget;
 
+void PlayerReadingNote(UUserWidget* mywidget);
+void PlayerStopReading(UUserWidget* widget);
 
 };
