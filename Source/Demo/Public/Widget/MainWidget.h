@@ -11,6 +11,8 @@
 /**
  * 
  */
+class UProgressBar;
+
 UCLASS()
 class DEMO_API UMainWidget : public UUserWidget
 {
@@ -24,7 +26,25 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class UQuickSlotBarWidget* QuickSlotBar;
 
-	
+	UPROPERTY(meta = (BindWidget))
+	class	UProgressBar* HealthBar;
 
-	
+	UPROPERTY(meta = (BindWidget))
+	class	UProgressBar* ThirstBar;
+
+	UPROPERTY(meta = (BindWidget))
+	class	UProgressBar* RadioactiveBar;
+
+	UPROPERTY(meta = (BindWidget))
+	class	UProgressBar* StaminaBar;
+
+
+	UPROPERTY(meta = (BindWidget))
+	class	UProgressBar* HungerBar;
+
+	void UpdateHealthUI(float value);
+	void UpdateStaminaUI(float value);
+	void UpdateRadioactiveUI(float value);
+	void UpdateHungerUI(float value);
+	void UpdateThirstUI(float value);
 };

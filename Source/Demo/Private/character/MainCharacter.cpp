@@ -21,6 +21,7 @@
 #include "Widget/MainWidget.h"
 #include "Widget/QuickSlotBarWidget.h"
 #include "character/MainCharacterController.h"
+
 AMainCharacter::AMainCharacter()
 {
  	
@@ -274,8 +275,8 @@ void AMainCharacter::Tick(float DeltaTime)
 		}
 		PreviousItem = CurrentItem;
 	}
-	
-	
+	TakeHealth(.2f);
+	UE_LOG(LogTemp, Warning, TEXT("HEALTH %d"), Health);
 }
 
 
@@ -403,7 +404,7 @@ void  AMainCharacter::Pickup()
 			
 			InventoryComponent->AddItem(CurrentItem->ItemData);
 			
-		
+			CurrentItem = nullptr;
 		
 			
 		
@@ -414,6 +415,62 @@ void  AMainCharacter::Pickup()
 		}
 	}
 	
+}
+
+void AMainCharacter::TakeHealth(float value)
+{
+	Health -= value;
+	Health = FMath::Clamp(Health, 0.0f, 100.f);
+	float percentage = Health / 100.f;
+	AMainCharacterController* Charactercontroller = Cast<AMainCharacterController>(Controller);
+
+
+	Charactercontroller->UpdateHealth(percentage);
+
+}
+
+void AMainCharacter::TakeStamina(float value)
+{
+	Stamina -= value;
+	Stamina = FMath::Clamp(Stamina, 0.f, 100.f);
+	float Percentage = Stamina / 100;
+	AMainCharacterController* Charactercontroller = Cast<AMainCharacterController>(Controller);
+	
+	Charactercontroller->UpdateStamina(Percentage);
+
+}
+
+void AMainCharacter::TakeRadioactive(float value)
+{
+	Radioactive -= value;
+	Radioactive = FMath::Clamp(Radioactive, 0.f, 100.f);
+	float Percentage = Radioactive / 100.f;
+	AMainCharacterController* Charactercontroller = Cast<AMainCharacterController>(Controller);
+	Charactercontroller->UpdateRadioactive(Percentage);
+
+
+}
+
+void AMainCharacter::TakeHunger(float value)
+{
+	Hunger -= value;
+	Hunger = FMath::Clamp(Hunger, 0.f, 100.f);
+	float percentage = Hunger / 100.f;
+	AMainCharacterController* Charactercontroller = Cast<AMainCharacterController>(Controller);
+	Charactercontroller->UpdateHunger(percentage);
+
+
+}
+
+void AMainCharacter::TakeThirst(float value)
+{
+	Thirst -= value;
+	Thirst = FMath::Clamp(Thirst, 0.f, 100.f);
+	float percentage = Thirst / 100;
+	AMainCharacterController* Charactercontroller = Cast<AMainCharacterController>(Controller);
+	Charactercontroller->UpdateThirst(percentage);
+
+
 }
 
 void AMainCharacter::EPressed()

@@ -29,9 +29,14 @@ public:
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UUserWidget> QuickSlotClass;
 
-class	UMainWidget* SlotWidget;
+class	UMainWidget* MainWidget;
 
 void PlayerReadingNote(UUserWidget* mywidget);
 void PlayerStopReading(UUserWidget* widget);
 
+void UpdateHealth(float value);
+void UpdateStamina(float value);
+void UpdateHunger(float value);
+void UpdateRadioactive(float value);
+void UpdateThirst(float value);
 };

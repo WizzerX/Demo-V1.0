@@ -97,4 +97,29 @@ public:
 
 
 
+	 UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
+	 float Health = 100;
+
+	 UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
+	 float Thirst = 100;
+
+	 UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
+	 float Hunger = 100;
+
+	 UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
+	 float Radioactive = 100;
+
+
+	 UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
+	 float Stamina = 100;
+
+	 void TakeHealth(float value);
+	 void TakeStamina(float value);
+	 void TakeRadioactive(float value);
+	 void TakeHunger(float value);
+	 void TakeThirst(float value);
+
+
+
+
 };

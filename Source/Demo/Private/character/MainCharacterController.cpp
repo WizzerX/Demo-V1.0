@@ -7,11 +7,11 @@
 void AMainCharacterController::BeginPlay()
 {
     Super::BeginPlay();
-    SlotWidget = CreateWidget<UMainWidget>(this, QuickSlotClass);
+    MainWidget = CreateWidget<UMainWidget>(this, QuickSlotClass);
 
-    if (SlotWidget)
+    if (MainWidget)
     {
-        SlotWidget->AddToViewport();
+        MainWidget->AddToViewport();
 
 
     }
@@ -45,5 +45,35 @@ void AMainCharacterController::PlayerStopReading(UUserWidget* widget)
     SetInputMode(GameMode);
     SetIgnoreMoveInput(false);
     widget->RemoveFromParent();
+}
+
+void AMainCharacterController::UpdateHealth(float value)
+{
+    MainWidget->UpdateHealthUI(value);
+
+
+
+}
+
+void AMainCharacterController::UpdateStamina(float value)
+{
+    MainWidget->UpdateStaminaUI(value);
+}
+
+void AMainCharacterController::UpdateHunger(float value)
+{
+    MainWidget->UpdateHungerUI(value);
+}
+
+void AMainCharacterController::UpdateRadioactive(float value)
+{
+
+    MainWidget->UpdateRadioactiveUI(value);
+}
+
+void AMainCharacterController::UpdateThirst(float value)
+{
+
+    MainWidget->UpdateThirstUI(value);
 }
 
