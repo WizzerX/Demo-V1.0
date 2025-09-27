@@ -60,10 +60,14 @@ void AMainCharacterController::UpdateStamina(float value)
     MainWidget->UpdateStaminaUI(value);
 }
 
-void AMainCharacterController::UpdateHunger(float value)
+void AMainCharacterController::UpdateHungerAndThirst(float HungerValue, float ThirstValue)
 {
-    MainWidget->UpdateHungerUI(value);
+    MainWidget->SurvivialDelegate.Broadcast(HungerValue, ThirstValue);
+
+
 }
+
+
 
 void AMainCharacterController::UpdateRadioactive(float value)
 {
@@ -71,9 +75,4 @@ void AMainCharacterController::UpdateRadioactive(float value)
     MainWidget->UpdateRadioactiveUI(value);
 }
 
-void AMainCharacterController::UpdateThirst(float value)
-{
-
-    MainWidget->UpdateThirstUI(value);
-}
 

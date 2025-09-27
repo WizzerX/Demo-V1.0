@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-
 #include "MainCharacter.generated.h"
 
 
@@ -23,7 +22,7 @@ class DEMO_API AMainCharacter : public ACharacter
 private:
 	void EPressed();
 	void EReleased();
-
+	
 
 
 public:
@@ -93,8 +92,8 @@ public:
 	 class APickupableItem* PickupableItem;
 	 bool bInteractable=false;
 	 bool bEPressed = false;
-	
-
+	 APickupableItem* CurrentEquiped;
+	 int CurrentSlot;
 
 
 	 UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character")
@@ -116,10 +115,9 @@ public:
 	 void TakeHealth(float value);
 	 void TakeStamina(float value);
 	 void TakeRadioactive(float value);
-	 void TakeHunger(float value);
-	 void TakeThirst(float value);
+	 void UpdateHungerAndThirst();
 
-
+	 FTimerHandle HungerAndThirstTimer;
 
 
 };

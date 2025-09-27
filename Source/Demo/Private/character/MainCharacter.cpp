@@ -21,7 +21,7 @@
 #include "Widget/MainWidget.h"
 #include "Widget/QuickSlotBarWidget.h"
 #include "character/MainCharacterController.h"
-
+#include "TimerManager.h"
 AMainCharacter::AMainCharacter()
 {
  	
@@ -44,6 +44,8 @@ AMainCharacter::AMainCharacter()
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GetWorld()->GetTimerManager().SetTimer(HungerAndThirstTimer, this, &AMainCharacter::UpdateHungerAndThirst, 1, true, 1.f);
 	
 }
 
@@ -138,33 +140,27 @@ void AMainCharacter::Fire()
 		GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_WorldStatic, Params);
 
 		DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 5.f);
-		/*
-		if (CurrentItem)
-		{
-			CurrentItem->SetItemState(EItemState::EIS_Pickup);
-
-		}
-
-		*/
+	
 	
 }
 
 void AMainCharacter::DropItem()
 {
 	
-	if (!CurrentItem )return;
+	if (!CurrentEquiped )return;
 
 	
 	UE_LOG(LogTemp, Warning, TEXT("Drop THE ITEM"));
 	
-	if (CurrentItem && !bIsReading)
+	if (CurrentEquiped && !bIsReading)
 	{
-		CurrentItem->GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		const FInventoryItemData& Item = InventoryComponent->GetItemAt(CurrentSlot);
+		CurrentEquiped->GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		InventoryComponent->RemoveItem(Item);
 
 
 
-
-		CurrentItem->SetItemState(EItemState::EIS_Falling);
+		CurrentEquiped->SetItemState(EItemState::EIS_Falling);
 
 		
 		PickupableItem = nullptr;
@@ -192,8 +188,14 @@ void AMainCharacter::Slot1()
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		if (item.Quantity != 0)
 		{
-			GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
-			InventoryComponent->RemoveItem(item);
+			auto spawn= GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
+			spawn->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("NONE"));
+			FQuat quat( FRotator(172.799545, 104.399696,0.0));
+			
+			spawn->SetActorRelativeRotation(quat);  
+			spawn->SetItemState(EItemState::EIS_Equipped);
+			CurrentEquiped = spawn;
+			CurrentSlot = 0;
 		}
 	}
 }
@@ -275,7 +277,7 @@ void AMainCharacter::Tick(float DeltaTime)
 		}
 		PreviousItem = CurrentItem;
 	}
-	TakeHealth(.2f);
+	//UpdateHungerAndThirst();
 	UE_LOG(LogTemp, Warning, TEXT("HEALTH %d"), Health);
 }
 
@@ -451,24 +453,22 @@ void AMainCharacter::TakeRadioactive(float value)
 
 }
 
-void AMainCharacter::TakeHunger(float value)
+void AMainCharacter::UpdateHungerAndThirst()
 {
-	Hunger -= value;
-	Hunger = FMath::Clamp(Hunger, 0.f, 100.f);
-	float percentage = Hunger / 100.f;
+	Hunger = FMath::Clamp(Hunger-3.f, 0.0f, 100.f);
+	Thirst = FMath::Clamp(Thirst-5.f, 0.0f, 100.0f);
+
+	if (Hunger <= 0 || Thirst <= 0)
+	{
+
+		TakeHealth(1.5f);
+	}
 	AMainCharacterController* Charactercontroller = Cast<AMainCharacterController>(Controller);
-	Charactercontroller->UpdateHunger(percentage);
+	float HungerPercentage = Hunger / 100.f;
+	float ThirstPercentage = Thirst / 100.f;
 
-
-}
-
-void AMainCharacter::TakeThirst(float value)
-{
-	Thirst -= value;
-	Thirst = FMath::Clamp(Thirst, 0.f, 100.f);
-	float percentage = Thirst / 100;
-	AMainCharacterController* Charactercontroller = Cast<AMainCharacterController>(Controller);
-	Charactercontroller->UpdateThirst(percentage);
+	Charactercontroller->UpdateHungerAndThirst(HungerPercentage, ThirstPercentage);
+	
 
 
 }

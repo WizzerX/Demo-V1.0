@@ -8,6 +8,8 @@
 #include "Widget/QuickSlotBarWidget.h"
 #include "MainWidget.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHungerThirstDelegate, float ,HungerValue, float ,ThirstValue);
+
 /**
  * 
  */
@@ -22,6 +24,9 @@ class DEMO_API UMainWidget : public UUserWidget
 
 public:
 
+
+
+	virtual void NativeConstruct() override;
 
 	UPROPERTY(meta = (BindWidget))
 	class UQuickSlotBarWidget* QuickSlotBar;
@@ -42,9 +47,14 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class	UProgressBar* HungerBar;
 
+	FHungerThirstDelegate SurvivialDelegate;
+
+	UFUNCTION()
+	void UpdateHungerAndThirst(float HungerValue, float ThirstValue);
+
+
 	void UpdateHealthUI(float value);
 	void UpdateStaminaUI(float value);
 	void UpdateRadioactiveUI(float value);
-	void UpdateHungerUI(float value);
-	void UpdateThirstUI(float value);
+	
 };

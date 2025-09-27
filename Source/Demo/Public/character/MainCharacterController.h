@@ -36,7 +36,7 @@ void PlayerStopReading(UUserWidget* widget);
 
 void UpdateHealth(float value);
 void UpdateStamina(float value);
-void UpdateHunger(float value);
+void UpdateHungerAndThirst(float HungerValue, float ThirstValue);
 void UpdateRadioactive(float value);
-void UpdateThirst(float value);
+
 };

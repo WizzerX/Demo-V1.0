@@ -20,12 +20,16 @@ class DEMO_API AConsumble : public APickupableItem
 
 public:
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	float thirst = 49;
 
-	virtual bool IsPickable()const { return false; }
-
+	virtual bool IsPickable()const { return true; }
+	void UseConsumble();
 
 private:
 	virtual void Interact(AMainCharacter* Character) override;
+
+
 
 	AConsumble();
 };

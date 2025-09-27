@@ -4,6 +4,11 @@
 #include "Item/Consumble/Consumble.h"
 
 
+void AConsumble::UseConsumble()
+{
+
+}
+
 void AConsumble::Interact(AMainCharacter* Character)
 {
 	UE_LOG(LogTemp, Error, TEXT("APPLE IS USED!"));
