@@ -4,10 +4,7 @@
 #include "Item/Consumble/Consumble.h"
 
 
-void AConsumble::UseConsumble()
-{
 
-}
 
 void AConsumble::Interact(AMainCharacter* Character)
 {
@@ -24,7 +21,27 @@ AConsumble::AConsumble()
 
 }
 
+void AConsumble::UseConsumble()
+{
+	switch (ConsumbleType)
+	{
+	case EConsumbleType::Thirst:
+		
+		break;
+	case EConsumbleType::Hunger:
+		break;
+	case EConsumbleType::RadioActiveHeal:
+		break;
+	case EConsumbleType::HealthHeal:
+		break;
+	case EConsumbleType::custom:
+		break;
+	default:
+		break;
+	}
 
+
+}
 
 
 	

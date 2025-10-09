@@ -9,6 +9,22 @@
 /**
  * 
  */
+UENUM(BlueprintType)
+enum class EConsumbleType :uint8
+{
+	Thirst,
+	Hunger,
+	RadioActiveHeal,
+	HealthHeal,
+	custom
+
+
+};
+
+
+
+
+
 UCLASS()
 class DEMO_API AConsumble : public APickupableItem
 {
@@ -21,15 +37,17 @@ class DEMO_API AConsumble : public APickupableItem
 public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	float thirst = 49;
+	float value = 49;
 
 	virtual bool IsPickable()const { return true; }
 	void UseConsumble();
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	EConsumbleType ConsumbleType;
+
 private:
 	virtual void Interact(AMainCharacter* Character) override;
-
-
+	
 
 	AConsumble();
 };

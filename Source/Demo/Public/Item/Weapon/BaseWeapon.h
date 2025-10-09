@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Item/Interactable/PickupableItem.h"
 #include "BaseWeapon.generated.h"
-
 /**
  * 
  */
@@ -13,5 +12,11 @@ UCLASS()
 class DEMO_API ABaseWeapon : public APickupableItem
 {
 	GENERATED_BODY()
+
+
+public:
+
+	ABaseWeapon();
+
 	
 };

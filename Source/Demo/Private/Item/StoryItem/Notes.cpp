@@ -8,6 +8,7 @@
 #include "Demo/TheGameMode.h"
 #include "Components/WidgetComponent.h"
 #include "character/MainCharacterController.h"
+#include "Kismet/GameplayStatics.h"
 ANotes::ANotes()
 {
 	
@@ -26,6 +27,7 @@ void ANotes::Interact(AMainCharacter* Character)
 		(Character->Controller);
 	if (CharacterController && Character->bIsReading==false)
 	{
+		UGameplayStatics::PlaySound2D(GetWorld(),PageSound);
 		NoteWidget = CreateWidget<UUserWidget>(GetWorld(), NoteWidgetClass);
 		NoteWidget->AddToViewport();
 		CharacterController->PlayerReadingNote(NoteWidget);

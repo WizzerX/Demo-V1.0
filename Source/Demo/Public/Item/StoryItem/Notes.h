@@ -9,6 +9,8 @@
 /**
  * 
  */
+class USoundBase;
+
 UCLASS()
 class DEMO_API ANotes : public APickupableItem
 {
@@ -34,4 +36,7 @@ public:
 private:
 
 	void StopReading();
+	
+	UPROPERTY(EditAnyWhere)
+	USoundBase* PageSound;
 };

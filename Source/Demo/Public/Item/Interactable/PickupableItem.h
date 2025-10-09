@@ -24,6 +24,8 @@ public:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
 	int	Quantity;
 
+	FGuid IdCode;
+
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
 	class UTexture2D* Icon = nullptr;
 

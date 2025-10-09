@@ -15,9 +15,14 @@ ABaseInteractable::ABaseInteractable()
  	
 	PrimaryActorTick.bCanEverTick = true;
 
+	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComp"));
+	SetRootComponent(SceneComponent);
+
+	SceneComponent->SetRelativeLocation(FVector(50.f, 0.0, 0.0));
+
 
 	BoxMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	SetRootComponent(BoxMesh);
+	BoxMesh->SetupAttachment(SceneComponent);
 	BoxMesh->SetVisibility(true);
 
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));

@@ -36,6 +36,10 @@ public:
 	class UWidgetComponent* WidgetComponent;
 
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	class USceneComponent* SceneComponent;
+
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadwrite, Category = "collision", meta = (AllowPrivateAccess = true))
 	class UStaticMeshComponent* BoxMesh;

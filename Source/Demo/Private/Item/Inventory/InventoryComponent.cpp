@@ -59,6 +59,7 @@ void UInventoryComponent::AddItem(const FInventoryItemData& Item)
 				if (slot[j].ItemName.IsNone()) // empty slot
 				{
 					slot[j] = Item;
+					slot[j].IdCode = FGuid::NewGuid();
 					SlotWidgetDelegate.Broadcast(j, slot[j]);
 					CharacterRef->CurrentItem->Destroy();
 					UE_LOG(LogTemp, Error, TEXT("Reused empty slot: %d"), j);
@@ -67,7 +68,10 @@ void UInventoryComponent::AddItem(const FInventoryItemData& Item)
 			}
 				if (slot.Num()<4)
 				{
+					
+					
 					int32 index=slot.Add(Item);
+					slot[index].IdCode = FGuid::NewGuid();
 					SlotWidgetDelegate.Broadcast(index, slot[index]);
 					CharacterRef->CurrentItem->Destroy();
 					UE_LOG(LogTemp, Error, TEXT("NEW ITEM ADDDED !"));
@@ -88,7 +92,7 @@ void UInventoryComponent::RemoveItem(const FInventoryItemData& Item)
 	for (int index = 0; index < slot.Num(); index++)
 	{
 
-		if (slot[index].ItemName == Item.ItemName)
+		if (slot[index].IdCode == Item.IdCode)
 		{
 			slot[index].Quantity--;
 

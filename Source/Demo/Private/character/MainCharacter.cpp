@@ -22,6 +22,7 @@
 #include "Widget/QuickSlotBarWidget.h"
 #include "character/MainCharacterController.h"
 #include "TimerManager.h"
+#include "Demo/Public/Item/Weapon/BaseWeapon.h"
 AMainCharacter::AMainCharacter()
 {
  	
@@ -36,6 +37,8 @@ AMainCharacter::AMainCharacter()
 	AttachPoint->AttachTo(GetRootComponent());
 	
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
+
+
 	
 	
 }
@@ -162,7 +165,7 @@ void AMainCharacter::DropItem()
 
 		CurrentEquiped->SetItemState(EItemState::EIS_Falling);
 
-		
+		CurrentEquiped = nullptr;
 		PickupableItem = nullptr;
 		CurrentItem = nullptr;
 		PreviousItem = nullptr;
@@ -182,20 +185,30 @@ void AMainCharacter::Slot1()
 
 
 		// Spawn actor
+
 		FActorSpawnParameters Params;
 		Params.Owner = this;
 		Params.Instigator = GetInstigator();
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	
+		if (CurrentEquiped)
+		{
+			CurrentEquiped->Destroy();
+		}
+
+
 		if (item.Quantity != 0)
 		{
-			auto spawn= GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
+			//FVector SpawnLocation =	springArm->GetComponentLocation() + springArm->GetForwardVector() * springArm->TargetArmLength;
+			auto spawn = GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass,AttachPoint->GetComponentLocation(), AttachPoint->GetComponentRotation(), Params);
 			spawn->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("NONE"));
-			FQuat quat( FRotator(172.799545, 104.399696,0.0));
 			
-			spawn->SetActorRelativeRotation(quat);  
+			
+			  
 			spawn->SetItemState(EItemState::EIS_Equipped);
 			CurrentEquiped = spawn;
 			CurrentSlot = 0;
+			
 		}
 	}
 }
@@ -208,16 +221,30 @@ void AMainCharacter::Slot2()
 		UE_LOG(LogTemp, Warning, TEXT("Slot2  is pressed!"));
 		const FInventoryItemData& item = InventoryComponent->GetItemAt(1);
 
+		if (CurrentEquiped)
+		{
+			CurrentEquiped->Destroy();
+		}
+
+
 
 		// Spawn actor
 		FActorSpawnParameters Params;
 		Params.Owner = this;
 		Params.Instigator = GetInstigator();
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		if (item.Quantity != 0)
+		{
+			auto spawn = GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
+			spawn->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("NONE"));
+			FQuat quat(FRotator(172.799545, 104.399696, 0.0));
 
-		GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
-		InventoryComponent->RemoveItem(item);
+			spawn->SetActorRelativeRotation(quat);
+			spawn->SetItemState(EItemState::EIS_Equipped);
+			CurrentEquiped = spawn;
+			CurrentSlot = 1;
 
+		}
 	}
 
 }
@@ -230,14 +257,30 @@ void AMainCharacter::Slot3()
 		UE_LOG(LogTemp, Warning, TEXT("Slot3  is pressed!"));
 		const FInventoryItemData& item = InventoryComponent->GetItemAt(2);
 
+		if (CurrentEquiped)
+		{
+			CurrentEquiped->Destroy();
+		}
+
+
+
+
 		// Spawn actor
 		FActorSpawnParameters Params;
 		Params.Owner = this;
 		Params.Instigator = GetInstigator();
 		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		if (item.Quantity != 0)
+		{
+			auto spawn = GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
+			spawn->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("NONE"));
+			FQuat quat(FRotator(172.799545, 104.399696, 0.0));
 
-		GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
-		InventoryComponent->RemoveItem(item);
+			spawn->SetActorRelativeRotation(quat);
+			spawn->SetItemState(EItemState::EIS_Equipped);
+			CurrentEquiped = spawn;
+			CurrentSlot = 2;
+		}
 	}
 
 }
@@ -247,17 +290,44 @@ void AMainCharacter::Slot4()
 	UE_LOG(LogTemp, Warning, TEXT("Slot4  is pressed!"));
 	const FInventoryItemData& item = InventoryComponent->GetItemAt(3);
 
+	if (CurrentEquiped)
+	{
+		CurrentEquiped->Destroy();
+	}
+
+
+
 	// Spawn actor
 	FActorSpawnParameters Params;
 	Params.Owner = this;
 	Params.Instigator = GetInstigator();
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
-	InventoryComponent->RemoveItem(item);
+	if (item.Quantity != 0)
+	{
+		auto spawn = GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
+		spawn->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("NONE"));
+		FQuat quat(FRotator(172.799545, 104.399696, 0.0));
+
+		spawn->SetActorRelativeRotation(quat);
+		spawn->SetItemState(EItemState::EIS_Equipped);
+		CurrentEquiped = spawn;
+		CurrentSlot = 3;
+	}
 
 
 	
+}
+
+void AMainCharacter::Unequip()
+{
+	if (CurrentEquiped)
+	{
+		CurrentEquiped->Destroy();
+	}
+
+
+
 }
 
 
@@ -277,8 +347,7 @@ void AMainCharacter::Tick(float DeltaTime)
 		}
 		PreviousItem = CurrentItem;
 	}
-	//UpdateHungerAndThirst();
-	UE_LOG(LogTemp, Warning, TEXT("HEALTH %d"), Health);
+
 }
 
 
@@ -312,6 +381,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Slot-2", IE_Pressed, this, &AMainCharacter::Slot2);
 	PlayerInputComponent->BindAction("Slot-3", IE_Pressed, this, &AMainCharacter::Slot3);
 	PlayerInputComponent->BindAction("Slot-4", IE_Pressed, this, &AMainCharacter::Slot4);
+	PlayerInputComponent->BindAction("Unequip", IE_Pressed, this, &AMainCharacter::Unequip);
 }
 void AMainCharacter::CurrentTraceItem()
 {

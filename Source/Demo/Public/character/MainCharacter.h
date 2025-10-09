@@ -46,7 +46,7 @@ protected:
 	void Slot2();
 	void Slot3();
 	void Slot4();
-
+	void Unequip();
 
 public:	
 	// Called every frame
@@ -76,8 +76,11 @@ public:
 	float BaseTurnRate;
 
 
-	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = movement, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = movement, meta = (AllowPrivateAccess = true))
 	USceneComponent* AttachPoint;
+
+
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Inventroy, meta = (AllowPrivateAccess = true))
    class	UInventoryComponent* InventoryComponent;
