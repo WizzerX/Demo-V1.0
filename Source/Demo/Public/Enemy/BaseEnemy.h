@@ -37,8 +37,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-
+private:
+	FTimerHandle DistanceTime;
+	ACharacter* TargetPawn;
 
 
 public:	
@@ -52,12 +53,29 @@ public:
 
 
 	void Roam();
-	void Chase(ACharacter* Character);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UWidgetComponent* WidgetComponent;
+
+
+
+	UFUNCTION(BlueprintCallable)
+	void Chase();
+
+
 	void Flee(ACharacter* Character);
-	void Attack(ACharacter* Character);
+
+	UFUNCTION(BlueprintCallable)
+	void Attack();
+
+	UFUNCTION(BlueprintCallable)
+	void CheckDistanceToPlayer();
+
 
 	UFUNCTION()
-	void OnPerceptionUpdate(AActor* Actor,const FAIStimulus& Stimulus);
+	void OnPerceptionUpdate(const TArray<AActor*>& UpdatedActors);
+	
+class	AAIController* EnemyController;
 
 UPROPERTY(EditAnywhere, BlueprintReadWrite)
 class	UAISenseConfig_Sight* AIConfig;
@@ -71,5 +89,14 @@ class	UAISenseConfig_Sight* AIConfig;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 class	UAIPerceptionStimuliSourceComponent* PerceptionStimuliSourceComponent;
+
+UPROPERTY(VisibleAnyWhere,BlueprintReadOnly,Category="AI")
+bool bAttackable;
+
+
+UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "AI")
+bool bAttacking;
+
+class UBlackboardComponent* BlackBoardComponent;
 
 };

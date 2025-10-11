@@ -18,5 +18,9 @@ public:
 
 	ABaseWeapon();
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+class	USoundCue* ShootSound;
+
+
 	
 };

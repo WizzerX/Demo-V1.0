@@ -525,8 +525,8 @@ void AMainCharacter::TakeRadioactive(float value)
 
 void AMainCharacter::UpdateHungerAndThirst()
 {
-	Hunger = FMath::Clamp(Hunger-3.f, 0.0f, 100.f);
-	Thirst = FMath::Clamp(Thirst-5.f, 0.0f, 100.0f);
+	Hunger = FMath::Clamp(Hunger, 0.0f, 100.f);
+	Thirst = FMath::Clamp(Thirst, 0.0f, 100.0f);
 
 	if (Hunger <= 0 || Thirst <= 0)
 	{
