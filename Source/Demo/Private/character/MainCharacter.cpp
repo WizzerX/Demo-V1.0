@@ -23,6 +23,10 @@
 #include "character/MainCharacterController.h"
 #include "TimerManager.h"
 #include "Demo/Public/Item/Weapon/BaseWeapon.h"
+#include "NiagaraSystem.h"
+#include "NiagaraFunctionLibrary.h"
+#include "D:\UE_4.27\UE_4.27\UE_4.27\Engine\Plugins\FX\Niagara\Source\Niagara\Public\NiagaraFunctionLibrary.h"
+
 AMainCharacter::AMainCharacter()
 {
  	
@@ -143,7 +147,20 @@ void AMainCharacter::Fire()
 		GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_WorldStatic, Params);
 
 		DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 5.f);
-	
+		if (CurrentEquiped->CheckWeapon(EItemCategory::IC_WEAPON))
+		{
+
+			ABaseWeapon* Weapon = Cast<ABaseWeapon>(CurrentEquiped);
+			if (Weapon)
+			{
+				UGameplayStatics::PlaySound2D(GetWorld(), Weapon->ShootSound);
+				UNiagaraFunctionLibrary::SpawnSystemAttached(Weapon->GunFlash, Weapon->GetMesh(), FName("Muzzle"),FVector::ZeroVector,FRotator::ZeroRotator,EAttachLocation::SnapToTarget,true);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("CAST FAILED!"));
+			}
+		}
 	
 }
 

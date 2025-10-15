@@ -10,10 +10,10 @@ UENUM(BlueprintType)
 enum class EItemCategory :uint8
 {
 	IC_NONE UMETA(DisplayName = "NONE"),
-	IC_WEAPON UMETA(DisplayName = "VLUE"),
-	IC_LEVER UMETA(DisplayName = "VALUE"),
-	IC_CONSUMBLE UMETA (DisplayName = "VALUE"),	
-	IC_NOTES UMETA(DisplayName = "VALUE")
+	IC_WEAPON UMETA(DisplayName = "Weapon"),
+	IC_LEVER UMETA(DisplayName = "Lever"),
+	IC_CONSUMBLE UMETA (DisplayName = "Consumble"),	
+	IC_NOTES UMETA(DisplayName = "Notes")
 
 
 
@@ -38,6 +38,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	class USceneComponent* SceneComponent;
+
+
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly)
+	EItemCategory ItemCategory;
+
+	bool CheckWeapon(EItemCategory ItemCategory);
 
 
 protected:
@@ -83,8 +89,7 @@ protected:
 
 	virtual bool IsPickable()const { return false; }
 
-	UPROPERTY(VisibleAnyWhere,BlueprintReadOnly)
-	EItemCategory ItemCategory;
+
 	
 
 

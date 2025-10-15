@@ -19,7 +19,20 @@ public:
 	ABaseWeapon();
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-class	USoundCue* ShootSound;
+class	USoundBase* ShootSound;
+
+UPROPERTY(EditAnywhere, BlueprintReadWrite)
+class UNiagaraSystem* GunFlash;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float VerticleKick;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float HorizontalKick;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float RecoverSpeed;
 
 
 	
