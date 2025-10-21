@@ -4,7 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Item/Weapon/BaseWeapon.h"
+//#include "Item/Weapon/WeaponType.h"
 #include "MainCharacter.generated.h"
+
+
+
+
+
 
 
 UCLASS()
@@ -12,10 +19,13 @@ class DEMO_API AMainCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess="true"))
-	class USpringArmComponent* springArm;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+public:
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class USpringArmComponent* SpringArm;
+
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* camera;
 
 
@@ -29,6 +39,8 @@ public:
 	
 	AMainCharacter();
 	bool bIsReading = false;
+
+	bool bShift = false;
 protected:
 	
 	virtual void BeginPlay() override;
@@ -47,7 +59,7 @@ protected:
 	void Slot3();
 	void Slot4();
 	void Unequip();
-
+	void Shift();
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -121,6 +133,13 @@ public:
 	 void UpdateHungerAndThirst();
 
 	 FTimerHandle HungerAndThirstTimer;
+
+	 FORCEINLINE UCameraComponent* GetCameraComponent() { return camera; }
+
+
+public:
+
+
 
 
 };

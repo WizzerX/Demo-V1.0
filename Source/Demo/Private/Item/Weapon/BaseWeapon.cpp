@@ -8,5 +8,14 @@ ABaseWeapon::ABaseWeapon()
 	
 	SceneComponent->SetRelativeLocation(FVector(0.0, 0.0f,280.f));
 
-	ItemCategory = EItemCategory::IC_WEAPON;
+	
+}
+
+void ABaseWeapon::FireTheWeapon()
+{
+	UE_LOG(LogTemp, Warning, TEXT("The Gun Is Fired!"));
+
+
+
+
 }

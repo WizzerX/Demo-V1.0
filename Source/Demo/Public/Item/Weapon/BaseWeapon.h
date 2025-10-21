@@ -8,6 +8,13 @@
 /**
  * 
  */
+
+
+
+
+
+
+
 UCLASS()
 class DEMO_API ABaseWeapon : public APickupableItem
 {
@@ -34,6 +41,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float RecoverSpeed;
 
+public:
+	UPROPERTY(VisibleAnyWhere,BlueprintReadOnly)
+	bool bActiveRecoil = false;
 
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly)
+	bool bRecoverRecoil = false;
+
+public:
+	virtual void FireTheWeapon();
 	
+
+
 };

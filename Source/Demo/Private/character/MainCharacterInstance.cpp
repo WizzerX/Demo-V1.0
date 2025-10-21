@@ -37,6 +37,11 @@ void UMainCharacterInstance::UpdateAnimationProperties(float DeltaTime)
 		Velocity.Z = 0;
 		speed = Velocity.Size();
 
+		bCrouching = MainCharacter->bCrouch;
+
+		Direction=CalculateDirection(MainCharacter->GetVelocity(), MainCharacter->GetActorRotation());
+
+
 		//UE_LOG(LogTemp, Warning, TEXT("Character: %s, Speed: %f"), *MainCharacter->GetName(), speed);
 
 		bIsInAir = MainCharacter->GetCharacterMovement()->IsFalling();

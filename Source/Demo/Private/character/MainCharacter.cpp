@@ -26,22 +26,23 @@
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
 #include "D:\UE_4.27\UE_4.27\UE_4.27\Engine\Plugins\FX\Niagara\Source\Niagara\Public\NiagaraFunctionLibrary.h"
-
+#include "Item/Weapon/BaseWeapon.h"
 AMainCharacter::AMainCharacter()
 {
  	
 	PrimaryActorTick.bCanEverTick = true;
-	springArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	springArm->SetupAttachment(RootComponent);
+
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	SpringArm->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("head"));
 
 	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	camera->SetupAttachment(springArm);
+	camera->SetupAttachment(SpringArm);
+
 
 	AttachPoint = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
 	AttachPoint->AttachTo(GetRootComponent());
 	
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
-
 
 	
 	
@@ -53,7 +54,15 @@ void AMainCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	GetWorld()->GetTimerManager().SetTimer(HungerAndThirstTimer, this, &AMainCharacter::UpdateHungerAndThirst, 1, true, 1.f);
-	
+	if (bShift)
+	{
+		bShift = false;
+		GetCharacterMovement()->MaxWalkSpeed = 300;
+
+		return;
+	}
+
+
 }
 
 void AMainCharacter::MoveRight(float value)
@@ -108,25 +117,35 @@ void AMainCharacter::LookUpAtRate(float value)
 
 void AMainCharacter::Crouch()
 {
-	bCrouch = true;
+	
 	UE_LOG(LogTemp, Warning, TEXT("Crouching"));
-	
-	
-	GetCapsuleComponent()->SetCapsuleHalfHeight(44);
-	float CapsuleHeight = GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight();
 
-	UE_LOG(LogTemp, Warning, TEXT("Capsule Half Height: %f"), CapsuleHeight);
-	
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("c"));
+	if (!bCrouch)
+	{
+		//GetCapsuleComponent()->SetCapsuleHalfHeight(88);
+		GetCharacterMovement()->MaxWalkSpeed = 200.f;
+		float CapsuleHeight = GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight();
+		UE_LOG(LogTemp, Warning, TEXT("Capsule Half Height: %f"), CapsuleHeight);
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("crouching"));
+		bCrouch = true;
+		return;
+	}
+	if (bCrouch)
+	{
+		bCrouch = false;
+		GetCharacterMovement()->MaxWalkSpeed = 600.f;
+		//GetCapsuleComponent()->SetCapsuleHalfHeight(88);
+		UE_LOG(LogTemp, Warning, TEXT("Stop_Crouching"));
+		return;
+
+	}
 
 
 }
 
 void AMainCharacter::StopCrouch()
 {
-	bCrouch = false;
-	GetCapsuleComponent()->SetCapsuleHalfHeight(88);
-	UE_LOG(LogTemp, Warning, TEXT("Stop_Crouching"));
+	
 
 }
 
@@ -153,8 +172,8 @@ void AMainCharacter::Fire()
 			ABaseWeapon* Weapon = Cast<ABaseWeapon>(CurrentEquiped);
 			if (Weapon)
 			{
-				UGameplayStatics::PlaySound2D(GetWorld(), Weapon->ShootSound);
-				UNiagaraFunctionLibrary::SpawnSystemAttached(Weapon->GunFlash, Weapon->GetMesh(), FName("Muzzle"),FVector::ZeroVector,FRotator::ZeroRotator,EAttachLocation::SnapToTarget,true);
+				Weapon->FireTheWeapon();
+
 			}
 			else
 			{
@@ -218,13 +237,24 @@ void AMainCharacter::Slot1()
 		{
 			//FVector SpawnLocation =	springArm->GetComponentLocation() + springArm->GetForwardVector() * springArm->TargetArmLength;
 			auto spawn = GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass,AttachPoint->GetComponentLocation(), AttachPoint->GetComponentRotation(), Params);
-			spawn->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("NONE"));
+			spawn->AttachToComponent(AttachPoint, FAttachmentTransformRules::KeepRelativeTransform, FName("NOaNE"));
 			
-			
+			spawn->SetActorRelativeLocation(FVector::ZeroVector);
+			spawn->SetActorRelativeRotation(FRotator::ZeroRotator);
 			  
 			spawn->SetItemState(EItemState::EIS_Equipped);
 			CurrentEquiped = spawn;
 			CurrentSlot = 0;
+
+			if (CurrentEquiped->GetItemCategory()==EItemCategory::IC_WEAPON)
+			{
+				CurrentEquiped = Cast<ABaseWeapon>(CurrentEquiped->GetOwner());
+			
+				
+
+			}
+
+
 			
 		}
 	}
@@ -347,6 +377,25 @@ void AMainCharacter::Unequip()
 
 }
 
+void AMainCharacter::Shift()
+{
+	if (bShift)
+	{
+		bShift = false;
+		GetCharacterMovement()->MaxWalkSpeed = 300;
+
+		return;
+	}
+	if (!bShift)
+	{
+		bShift = true;
+		GetCharacterMovement()->MaxWalkSpeed = 600;
+		return;
+	}
+
+	
+}
+
 
 void AMainCharacter::Tick(float DeltaTime)
 {
@@ -385,7 +434,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AMainCharacter::LookUpAtRate);
 
 	PlayerInputComponent->BindAction("Crouch",IE_Pressed,this, &AMainCharacter::Crouch);
-	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AMainCharacter::StopCrouch);
+	//PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AMainCharacter::StopCrouch);
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMainCharacter::Fire);
 
@@ -399,6 +448,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Slot-3", IE_Pressed, this, &AMainCharacter::Slot3);
 	PlayerInputComponent->BindAction("Slot-4", IE_Pressed, this, &AMainCharacter::Slot4);
 	PlayerInputComponent->BindAction("Unequip", IE_Pressed, this, &AMainCharacter::Unequip);
+	PlayerInputComponent->BindAction("Shift", IE_Pressed, this, &AMainCharacter::Shift);
 }
 void AMainCharacter::CurrentTraceItem()
 {

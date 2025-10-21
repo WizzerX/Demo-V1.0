@@ -104,6 +104,7 @@ public:
 
 	FORCEINLINE USphereComponent* GetSphere() { return SphereComponent; }
 	FORCEINLINE UBoxComponent* GetBox() { return BoxComponent; }
+	FORCEINLINE EItemCategory GetItemCategory() { return ItemCategory; }
 
 private:
 	class AMainCharacter* CharacterRef;

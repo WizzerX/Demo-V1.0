@@ -5,18 +5,17 @@
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
 #include "MainCharacter.h"
+//#include "Item/Weapon/WeaponType.h"
 #include "MainCharacterInstance.generated.h"
 
 UENUM(BlueprintType)
 enum class AnimationState : uint8
 {
-	
+
 	Runing UMETA(DisplayName = "Run"),
 	Idle UMETA(DisplayName = "IDLE")
 
 };
-
-
 
 
 /**
@@ -52,6 +51,11 @@ private:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = movement, meta = (AllowPrivateAccess = true))
 	bool bAccelerating;
 
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = movement, meta = (AllowPrivateAccess = true))
+	float Direction;
+
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = movement, meta = (AllowPrivateAccess = true))
+	bool bCrouching;
 
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = movement, meta = (AllowPrivateAccess = true))
 	AnimationState AnimationState;
