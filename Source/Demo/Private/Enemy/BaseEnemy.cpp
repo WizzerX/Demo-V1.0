@@ -44,7 +44,7 @@ ABaseEnemy::ABaseEnemy()
 
 	WidgetComponent->SetVisibility(false);
 
-
+	
 
 	bAttacking = false;
 	bAttackable = false;

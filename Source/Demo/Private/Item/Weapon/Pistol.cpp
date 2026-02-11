@@ -10,25 +10,26 @@
 APistol::APistol()
 {
 	
-	VerticleKick = -50.f;
-	HorizontalKick = 2.3f;
-	RecoverSpeed = .25f;
-	RecoilSpeed = 100.f;
-	CurrentRecoilTime = 0.f;
 
-	RecoilDuration = 0.5f;
 
-	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("GunMesh"));
-	WeaponMesh->SetupAttachment(GetRootComponent());
-	
+	//RecoilDuration = 0.5f;
+
+
+	WeaponType = EItemType::Pistol;
+	ItemCategory = EItemCategory::IC_WEAPON;
+	EItemState::EIS_PickedUp;
 }
 
 void APistol::FireTheWeapon()
 {
 
 	UGameplayStatics::PlaySound2D(GetWorld(),ShootSound);
-	UNiagaraFunctionLibrary::SpawnSystemAttached(GunFlash,GetMesh(), FName("Muzzle"),
-		FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::SnapToTarget, true);
+	//UNiagaraFunctionLibrary::SpawnSystemAttached(GunFlash,GetWeaponMesh(), FName("Muzzle"),
+		//FVector::ZeroVector, FRotator::ZeroRotator, EAttachLocation::SnapToTarget, true);
+
+	UAnimInstance* AnimInstance = GetWeaponMesh()->GetAnimInstance();
+	AnimInstance->Montage_Play(FireAnimation);
+
 
 	if (!CharacterRef) return;
 
@@ -36,15 +37,14 @@ void APistol::FireTheWeapon()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Character %s"), CharacterRef);
 		
-		bActiveRecoil = true;
-
 		
-		CurrentRecoilTime = 0.f;
-
+		
+		
+		/*
 		InitRot = BoxMesh->GetRelativeRotation();
 		FinalRot = InitRot;
 		FinalRot.Pitch += VerticleKick; // Move gun upward a bit
-		
+		*/
 		
 	}
 

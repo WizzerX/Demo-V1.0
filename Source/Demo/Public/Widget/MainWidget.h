@@ -29,7 +29,7 @@ public:
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(meta = (BindWidget))
-	class UQuickSlotBarWidget* QuickSlotBar;
+	class UQuickSlotBarWidget* RadialWheel;
 
 	UPROPERTY(meta = (BindWidget))
 	class	UProgressBar* HealthBar;
@@ -47,6 +47,7 @@ public:
 	UPROPERTY(meta = (BindWidget))
 	class	UProgressBar* HungerBar;
 
+	UPROPERTY(BlueprintAssignable)
 	FHungerThirstDelegate SurvivialDelegate;
 
 	UFUNCTION()

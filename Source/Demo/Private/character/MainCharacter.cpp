@@ -16,7 +16,6 @@
 #include "Components/SphereComponent.h"
 #include "Item/Interactable/PickupableItem.h"
 #include "Item/Inventory/InventoryComponent.h"
-#include "string"
 #include "Components/Widget.h"
 #include "Widget/MainWidget.h"
 #include "Widget/QuickSlotBarWidget.h"
@@ -25,26 +24,35 @@
 #include "Demo/Public/Item/Weapon/BaseWeapon.h"
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
-#include "D:\UE_4.27\UE_4.27\UE_4.27\Engine\Plugins\FX\Niagara\Source\Niagara\Public\NiagaraFunctionLibrary.h"
 #include "Item/Weapon/BaseWeapon.h"
+#include <Kismet/KismetMathLibrary.h>
+#include <character/MainCharacterInstance.h>
 AMainCharacter::AMainCharacter()
 {
  	
 	PrimaryActorTick.bCanEverTick = true;
-
-	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	SpringArm->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("head"));
-
-	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	camera->SetupAttachment(SpringArm);
-
-
-	AttachPoint = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
-	AttachPoint->AttachTo(GetRootComponent());
 	
+	
+
+
+	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camerarra"));	
+	camera->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::SnapToTargetIncludingScale);
+
+
+	AttachPoint = CreateDefaultSubobject<USceneComponent>(TEXT("AttachPoint"));
+
+	AttachPoint->SetupAttachment(GetRootComponent());
+	
+
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
 
+
+
+
 	
+
+	bTurnLeft = false;
+	bTurnRigt = false;
 	
 }
 
@@ -61,6 +69,9 @@ void AMainCharacter::BeginPlay()
 
 		return;
 	}
+	MainPlayerController = Cast<AMainCharacterController>(UGameplayStatics::GetPlayerController(this, 0));
+
+	CharacterInstance = Cast<UMainCharacterInstance>(GetMesh()->GetAnimInstance());
 
 
 }
@@ -152,7 +163,7 @@ void AMainCharacter::StopCrouch()
 void AMainCharacter::Fire()
 {
 	
-
+	bFire = true;
 		FVector StartLoc = camera->GetComponentLocation();
 		FVector ForwardLoc = camera->GetForwardVector();
 		FVector EndLoc = StartLoc + ForwardLoc * 800;
@@ -165,7 +176,7 @@ void AMainCharacter::Fire()
 
 		GetWorld()->LineTraceSingleByChannel(HitResult, StartLoc, EndLoc, ECollisionChannel::ECC_WorldStatic, Params);
 
-		DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 5.f);
+		//DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 5.f);
 		if (CurrentEquiped->CheckWeapon(EItemCategory::IC_WEAPON))
 		{
 
@@ -173,6 +184,7 @@ void AMainCharacter::Fire()
 			if (Weapon)
 			{
 				Weapon->FireTheWeapon();
+				Weapon->PlayAttackMontage();
 
 			}
 			else
@@ -181,6 +193,19 @@ void AMainCharacter::Fire()
 			}
 		}
 	
+}
+
+void AMainCharacter::StopFire()
+{
+	bFire = false;
+	ABaseWeapon* Weapon = Cast<ABaseWeapon>(CurrentEquiped);
+	if (Weapon)
+	{
+		Weapon->StopFire();
+
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Stop Fire!"));
+
 }
 
 void AMainCharacter::DropItem()
@@ -195,17 +220,21 @@ void AMainCharacter::DropItem()
 	{
 		const FInventoryItemData& Item = InventoryComponent->GetItemAt(CurrentSlot);
 		CurrentEquiped->GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		
 		InventoryComponent->RemoveItem(Item);
-
+	
 
 
 		CurrentEquiped->SetItemState(EItemState::EIS_Falling);
-
+		CurrentWeaponType = EItemType::None;
 		CurrentEquiped = nullptr;
 		PickupableItem = nullptr;
 		CurrentItem = nullptr;
 		PreviousItem = nullptr;
+	 
 	}
+	
+
 	
 
 }
@@ -235,26 +264,43 @@ void AMainCharacter::Slot1()
 
 		if (item.Quantity != 0)
 		{
-			//FVector SpawnLocation =	springArm->GetComponentLocation() + springArm->GetForwardVector() * springArm->TargetArmLength;
-			auto spawn = GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass,AttachPoint->GetComponentLocation(), AttachPoint->GetComponentRotation(), Params);
-			spawn->AttachToComponent(AttachPoint, FAttachmentTransformRules::KeepRelativeTransform, FName("NOaNE"));
+
+
 			
-			spawn->SetActorRelativeLocation(FVector::ZeroVector);
-			spawn->SetActorRelativeRotation(FRotator::ZeroRotator);
+			FName SocketName = item.SocketName;
+			auto spawn= GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, GetMesh()->GetSocketLocation(SocketName), GetMesh()->GetSocketRotation(SocketName), Params);
+			spawn->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName(SocketName));
+			
+			
 			  
 			spawn->SetItemState(EItemState::EIS_Equipped);
 			CurrentEquiped = spawn;
 			CurrentSlot = 0;
 
-			if (CurrentEquiped->GetItemCategory()==EItemCategory::IC_WEAPON)
-			{
-				CurrentEquiped = Cast<ABaseWeapon>(CurrentEquiped->GetOwner());
 			
+				if (CurrentEquiped)
+				{
+					//CurrentWeaponType=CurrentEquiped
+					UE_LOG(LogTemp, Warning, TEXT("Magic is happenigng!"));
+					//CurrentWeaponType=CurrentEquiped->GetWeaponType()
+					 CurrentWeaponType= CurrentEquiped->ItemType;
+					
+					//FVector Loc= CurrentWeapon->GetWeaponMesh()->GetSocketLocation(CurrentWeapon->SlotName);
+					//FRotator Roc = CurrentWeapon->GetWeaponMesh()->GetSocketRotation(CurrentWeapon->SlotName);
+					
+				}
 				
+					
+				
+					
+			
+			/*else if (CurrentEquiped->GetItemCategory() != EItemCategory::IC_WEAPON)
+			{
+				CurrentWeaponType = CurrentWeapon->GetItemType();
+
 
 			}
-
-
+			*/
 			
 		}
 	}
@@ -283,7 +329,7 @@ void AMainCharacter::Slot2()
 		if (item.Quantity != 0)
 		{
 			auto spawn = GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, this->GetTargetLocation(), FRotator::ZeroRotator, Params);
-			spawn->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("NONE"));
+			spawn->AttachToComponent(AttachPoint, FAttachmentTransformRules::SnapToTargetIncludingScale, spawn->SlotName);
 			FQuat quat(FRotator(172.799545, 104.399696, 0.0));
 
 			spawn->SetActorRelativeRotation(quat);
@@ -392,8 +438,60 @@ void AMainCharacter::Shift()
 		GetCharacterMovement()->MaxWalkSpeed = 600;
 		return;
 	}
+	
+	
+}
+
+void AMainCharacter::ScopeOn()
+{
 
 	
+
+	if (CharacterInstance)
+	{
+
+		if (CharacterInstance->Aiming == true)
+		{
+			CharacterInstance->Aiming = false;
+			UE_LOG(LogTemp, Warning, TEXT("  false"));
+			return;
+		}
+		if (CharacterInstance->Aiming == false)
+		{
+			CharacterInstance->Aiming = true;
+			UE_LOG(LogTemp, Warning, TEXT("  true"));
+			return;
+		}
+
+	}
+	if (CharacterInstance == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Null Ptr"));
+	}
+}
+
+void AMainCharacter::Inventory()
+{
+	if (bInventoryIsOpen)
+	{
+		bInventoryIsOpen = false;
+		if (MainPlayerController)
+		{
+			MainPlayerController->HideInventory();
+			UE_LOG(LogTemp, Warning, TEXT("ClosedInventory"));
+		}
+		return;
+	}
+	if (!bInventoryIsOpen)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OpenInventory"));
+		MainPlayerController->ShowInventory();
+		bInventoryIsOpen = true;
+		return;
+	}
+
+
+
 }
 
 
@@ -416,6 +514,25 @@ void AMainCharacter::Tick(float DeltaTime)
 
 }
 
+void AMainCharacter::AddControllerYawInput(float Val)
+{
+	if (Val != 0.f && Controller && Controller->IsLocalPlayerController())
+	{
+		
+		
+
+		APlayerController* const PC = CastChecked<APlayerController>(Controller);
+		PC->AddYawInput(Val);
+
+		
+
+	}
+}
+
+
+
+
+
 
 void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -428,7 +545,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMainCharacter::MoveRight);
 
 	
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("Turn", this, &AMainCharacter::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("TurnRate", this, &AMainCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AMainCharacter::LookUpAtRate);
@@ -437,6 +554,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	//PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AMainCharacter::StopCrouch);
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMainCharacter::Fire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AMainCharacter::StopFire);
 
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AMainCharacter::EPressed);
 	PlayerInputComponent->BindAction("Interact", IE_Released, this, &AMainCharacter::EReleased);
@@ -449,6 +567,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Slot-4", IE_Pressed, this, &AMainCharacter::Slot4);
 	PlayerInputComponent->BindAction("Unequip", IE_Pressed, this, &AMainCharacter::Unequip);
 	PlayerInputComponent->BindAction("Shift", IE_Pressed, this, &AMainCharacter::Shift);
+	PlayerInputComponent->BindAction("ScopeOn", IE_Pressed, this, &AMainCharacter::ScopeOn);
+	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AMainCharacter::Inventory);
 }
 void AMainCharacter::CurrentTraceItem()
 {
@@ -468,7 +588,7 @@ void AMainCharacter::CurrentTraceItem()
 			EndLoc,
 			ECollisionChannel::ECC_Visibility);
 		
-		DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 3.f);
+	//	DrawDebugLine(GetWorld(), StartLoc, EndLoc, FColor::Red, false, 3.f);
 		
 
 	
@@ -528,6 +648,15 @@ void AMainCharacter::Equip()
 
 
 }
+
+void AMainCharacter::PlayCameraShake(TSubclassOf<UCameraShakeBase> WeaponShake)
+{
+	MainPlayerController->ClientPlayCameraShake(WeaponShake);
+
+
+}
+
+
 
 void  AMainCharacter::Pickup()
 {
@@ -606,6 +735,168 @@ void AMainCharacter::UpdateHungerAndThirst()
 
 	Charactercontroller->UpdateHungerAndThirst(HungerPercentage, ThirstPercentage);
 	
+
+
+}
+
+void AMainCharacter::EquipFromIndex(int32 index)
+{
+	if (bIsReading)return;
+	
+
+		UE_LOG(LogTemp, Warning, TEXT("Slot1 is pressed!"));
+
+
+		const	FInventoryItemData& item = InventoryComponent->GetItemAt(index);
+		if (item.Quantity == 0)return;
+
+		/*if (CurrentEquiped->ItemData.ItemName == item.ItemName)
+		{
+
+			CurrentEquiped->Destroy();
+			return;
+		}*/
+
+		// Spawn actor
+
+		FActorSpawnParameters Params;
+		Params.Owner = this;
+		Params.Instigator = GetInstigator();
+		Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	
+
+		if (CurrentEquiped)
+		{
+			CurrentEquiped->Destroy();
+		}
+
+
+		if (item.Quantity != 0)
+		{
+
+
+			
+			FName SocketName = item.SocketName;
+			auto spawn = GetWorld()->SpawnActor<APickupableItem>(item.ItemActorClass, GetMesh()->GetSocketLocation(SocketName), GetMesh()->GetSocketRotation(SocketName), Params);
+			spawn->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName(SocketName));
+			
+
+			spawn->SetItemState(EItemState::EIS_Equipped);
+			CurrentEquiped = spawn;
+			CurrentSlot = 0;
+
+
+			if (CurrentEquiped)
+			{
+				//CurrentWeaponType=CurrentEquiped
+				UE_LOG(LogTemp, Warning, TEXT("Magic is happenigng!"));
+				//CurrentWeaponType=CurrentEquiped->GetWeaponType()
+				CurrentWeaponType = CurrentEquiped->ItemType;
+
+				//FVector Loc= CurrentWeapon->GetWeaponMesh()->GetSocketLocation(CurrentWeapon->SlotName);
+				//FRotator Roc = CurrentWeapon->GetWeaponMesh()->GetSocketRotation(CurrentWeapon->SlotName);
+				CurrentEquiped->ItemData.IdCode = InventoryComponent->slot[index].IdCode;
+			}
+
+
+
+
+
+		}
+
+	
+}
+
+void AMainCharacter::DropFromIndex(int32 index)
+{
+	if (bIsReading)
+	{
+		return;
+	}
+
+	if (!InventoryComponent)
+	{
+		UE_LOG(LogTemp, Error, TEXT("DropFromIndex: InventoryComponent is NULL"));
+		return;
+	}
+	if (!InventoryComponent->IsValidIndex(index))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("DropFromIndex: Invalid index %d"), index);
+
+		return;
+	}
+
+
+
+
+		const FInventoryItemData& Item = InventoryComponent->GetItemAt(index);
+		
+		if (Item.ItemActorClass == nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("DropFromIndex: Invalid index %d"));
+			return;
+		}
+
+
+
+		if (CurrentEquiped)
+		{
+			if (Item.ItemName == CurrentEquiped->ItemData.ItemName)
+			{
+				//CurrentEquiped->Destroy();
+				/*
+				CurrentEquiped->GetMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+				CurrentEquiped->GetSkeletalMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+				CurrentEquiped->SetItemState(EItemState::EIS_Falling);
+				InventoryComponent->RemoveItem(Item);
+				
+				CurrentWeaponType = EItemType::None;
+
+				////////////////////////////////////*                             ///////////////////*/
+				CurrentEquiped->Destroy();
+				
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.Instigator = GetInstigator();
+				SpawnParams.Owner = this;
+				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+				FVector Loc = GetActorLocation() + GetActorForwardVector() * 100.f;
+				Loc.Z -= 250.f;
+				FRotator Rot = GetActorRotation();
+
+				InventoryComponent->RemoveItem(Item);
+
+				CurrentWeaponType = EItemType::None;
+
+
+				auto Spawn = GetWorld()->SpawnActor<APickupableItem>(Item.ItemActorClass, Loc, Rot, SpawnParams);
+
+				Spawn->SetItemState(EItemState::EIS_Falling);
+
+				return;
+			}
+		}
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Instigator = GetInstigator();
+		SpawnParams.Owner = this;
+		SpawnParams.SpawnCollisionHandlingOverride=ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		FVector Loc = GetActorLocation() + GetActorForwardVector()*100.f;
+		Loc.Z -= 250.f;
+		FRotator Rot = GetActorRotation();
+
+
+		
+
+		auto Spawn = GetWorld()->SpawnActor<APickupableItem>(Item.ItemActorClass, Loc, Rot, SpawnParams);
+		
+		Spawn->SetItemState(EItemState::EIS_Falling);
+		InventoryComponent->RemoveItem(Item);
+	
+
+
+	
+
 
 
 }

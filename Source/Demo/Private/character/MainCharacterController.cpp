@@ -12,7 +12,7 @@ void AMainCharacterController::BeginPlay()
     if (MainWidget)
     {
         MainWidget->AddToViewport();
-
+       
 
     }
    
@@ -45,6 +45,25 @@ void AMainCharacterController::PlayerStopReading(UUserWidget* widget)
     SetInputMode(GameMode);
     SetIgnoreMoveInput(false);
     widget->RemoveFromParent();
+}
+
+void AMainCharacterController::HideInventory()
+{
+    MainWidget->RadialWheel->SetVisibility(ESlateVisibility::Hidden);
+    bShowMouseCursor = false;
+    SetInputMode(FInputModeGameOnly());
+
+}
+void AMainCharacterController::ShowInventory()
+{
+    MainWidget->RadialWheel->SetVisibility(ESlateVisibility::Visible);
+    bShowMouseCursor = true;
+
+    
+
+    SetInputMode(FInputModeGameAndUI());
+
+
 }
 
 void AMainCharacterController::UpdateHealth(float value)

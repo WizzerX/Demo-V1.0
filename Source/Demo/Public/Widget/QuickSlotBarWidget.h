@@ -19,28 +19,42 @@ class DEMO_API UQuickSlotBarWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(meta = (BindWidget))
-	class	UUniformGridPanel* Grid;
+	UPROPERTY(EditAnyWhere)
+		TArray<int32>SlotArray = { 0,1,2,3,4,5 };
 
+	
 	UPROPERTY()
 	UQuickSlotWidget* QuickSlotWidget;
 
-	
+	UFUNCTION(BlueprintCallable)
+		void SetSliceRotation(float Angle);
+
+
+
+	UPROPERTY(meta = (BindWidget))
+	class UCanvasPanel* Canvas;
 	
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	TArray<UQuickSlotWidget*>SlotBar;
+	TArray<UQuickSlotWidget*>RadialWheel;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UQuickSlotWidget>QuickSlotClass;
+	TSubclassOf<UQuickSlotWidget>QuickRadialSlotClass;
 
 
+	void RightClicked();
 
+	UFUNCTION()
+	void OnSlotClicked(int32 index);
 
 	virtual void NativeConstruct() override;
 
 	void AddWidget();
 
+	
+
+
+	UPROPERTY(VisibleAnyWhere,BlueprintReadOnly)
 	class AMainCharacter* CharacterRef;
 
 	UFUNCTION()

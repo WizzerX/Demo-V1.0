@@ -15,28 +15,28 @@ ABaseInteractable::ABaseInteractable()
  	
 	PrimaryActorTick.bCanEverTick = true;
 
-	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComp"));
-	SetRootComponent(SceneComponent);
+	// Create a scene root
+	//USceneComponent* SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRoot"));
+	//SetRootComponent(SceneRoot);
 
-	SceneComponent->SetRelativeLocation(FVector(50.f, 0.0, 0.0));
-
-
+	// Static mesh (physics)
 	BoxMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	BoxMesh->SetupAttachment(SceneComponent);
-	BoxMesh->SetVisibility(true);
+	SetRootComponent(BoxMesh);
 
+	// Weapon mesh
+	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
+	WeaponMesh->SetupAttachment(BoxMesh);
+
+	// Collision & interaction
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 	BoxComponent->SetupAttachment(BoxMesh);
 
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	SphereComponent->SetupAttachment(BoxMesh);
 
-
-
-
 	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
-	WidgetComponent->SetVisibility(false);
 	WidgetComponent->SetupAttachment(BoxMesh);
+
 
 
 	
@@ -138,11 +138,6 @@ void ABaseInteractable::BeginPlay()
 void ABaseInteractable::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-
-
-
-
 
 }
 

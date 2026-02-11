@@ -12,6 +12,7 @@ APickupableItem::APickupableItem()
 
 
 	WidgetComponent->SetVisibility(false);
+	
 	ItemState = EItemState::EIS_Pickup;
 
 
@@ -54,90 +55,131 @@ void APickupableItem::SetItemProperties(EItemState State)
 {
 	switch (State)
 	{
+		// ===================== PICKUP (ON GROUND, INTERACTABLE) =====================
 	case EItemState::EIS_Pickup:
-
-		BoxMesh->SetSimulatePhysics(false);
-		BoxMesh->SetEnableGravity(false);
+	{
+		// World mesh visible
 		BoxMesh->SetVisibility(true);
-		BoxMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		BoxMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-
-		SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
-		SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-
-
-		BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-		BoxComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility,
-			ECollisionResponse::ECR_Block);
-		break;
-	case EItemState::EIS_EquipInterping:
-		BoxMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		BoxMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-
-		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-
-		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-
-		BoxMesh->SetSimulatePhysics(false);
-		BoxMesh->SetEnableGravity(false);
-		BoxMesh->SetVisibility(true);
-		WidgetComponent->SetVisibility(false);
-		break;
-	case EItemState::EIS_PickedUp:
-		BoxMesh->SetVisibility(false);
-		BoxMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		BoxMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-
-		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-
-		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-
-		BoxMesh->SetSimulatePhysics(false);
-		BoxMesh->SetEnableGravity(false);
-
-		break;
-	case EItemState::EIS_Equipped:
-		BoxMesh->SetVisibility(true);
-		BoxMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		BoxMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-
-		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-
-		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-
-		BoxMesh->SetSimulatePhysics(false);
-		BoxMesh->SetEnableGravity(false);
-		WidgetComponent->SetVisibility(false);
-
-		break;
-	case EItemState::EIS_Falling:
-		BoxMesh->SetVisibility(true);
-		BoxMesh->SetEnableGravity(true);
 		BoxMesh->SetSimulatePhysics(true);
-		BoxMesh->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-		BoxMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Visibility, ECollisionResponse::ECR_Block);
-		BoxMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
-		BoxMesh->SetCollisionObjectType(ECC_PhysicsBody);
+		BoxMesh->SetEnableGravity(true);
 
+		BoxMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		BoxMesh->SetCollisionObjectType(ECC_WorldDynamic);
+		BoxMesh->SetCollisionResponseToAllChannels(ECR_Block);
 
-		BoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		BoxComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		// Weapon mesh hidden (not equipped yet)
+		WeaponMesh->SetVisibility(false);
+		WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		SphereComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		// Interaction sphere ON
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		SphereComponent->SetCollisionResponseToAllChannels(ECR_Overlap);
+		SphereComponent->SetGenerateOverlapEvents(true);
+
+		// Extra collision OFF
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		// UI hidden until player enters sphere
+		WidgetComponent->SetVisibility(false);
 		break;
-
-
 	}
 
-}
+	// ===================== FALLING / DROPPED =====================
+	case EItemState::EIS_Falling:
+	{
+		BoxMesh->SetVisibility(true);
+		BoxMesh->SetSimulatePhysics(true);
+		BoxMesh->SetEnableGravity(true);
+		BoxMesh->WakeAllRigidBodies();
 
+		BoxMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		BoxMesh->SetCollisionObjectType(ECC_PhysicsBody);
+		BoxMesh->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+		BoxMesh->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Block);
+		BoxMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+
+		WeaponMesh->SetVisibility(false);
+		WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		SphereComponent->SetGenerateOverlapEvents(false);
+
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		BoxComponent->SetGenerateOverlapEvents(false);
+		WidgetComponent->SetVisibility(false);
+		break;
+	}
+
+	// ===================== EQUIP INTERPING (ANIMATING TO HAND) =====================
+	case EItemState::EIS_EquipInterping:
+	{
+		BoxMesh->SetVisibility(false);
+		BoxMesh->SetSimulatePhysics(false);
+		BoxMesh->SetEnableGravity(false);
+		BoxMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		WeaponMesh->SetVisibility(true);
+		WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		WidgetComponent->SetVisibility(false);
+		break;
+	}
+
+	// ===================== EQUIPPED (IN HAND) =====================
+	case EItemState::EIS_Equipped:
+	{
+
+
+
+		// World mesh OFF
+		BoxMesh->SetVisibility(false);
+		BoxMesh->SetSimulatePhysics(false);
+		BoxMesh->SetEnableGravity(false);
+		BoxMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		// Weapon mesh ON
+		WeaponMesh->SetVisibility(true);
+		WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		// No interaction while equipped
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		WidgetComponent->SetVisibility(false);
+
+	
+
+
+
+
+		break;
+	}
+
+	// ===================== PICKED UP (IN INVENTORY, NOT EQUIPPED) =====================
+	case EItemState::EIS_PickedUp:
+	{
+		BoxMesh->SetVisibility(false);
+		BoxMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		BoxMesh->SetSimulatePhysics(false);
+		BoxMesh->SetEnableGravity(false);
+
+		WeaponMesh->SetVisibility(false);
+		WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		SphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		BoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		WidgetComponent->SetVisibility(false);
+		break;
+	}
+
+	default:
+		break;
+	}
+}
 
 
 void APickupableItem::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -158,8 +200,28 @@ void APickupableItem::OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, 
 void APickupableItem::BeginPlay()
 {
 	Super::BeginPlay();
-	BoxMesh->SetNotifyRigidBodyCollision(true);
-	BoxMesh->OnComponentHit.AddDynamic(this, &APickupableItem::OnCompHit);
+
+	//ItemData.IdCode = FGuid::NewGuid();
+
+	if (BoxMesh)
+	{
+		BoxMesh->SetNotifyRigidBodyCollision(true);
+		BoxMesh->OnComponentHit.AddDynamic(this, &APickupableItem::OnCompHit);
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("BoxMesh is NULL in %s"), *GetName());
+	}
+
+	if (BoxComponent)
+	{
+		BoxComponent->OnComponentHit.AddDynamic(this, &APickupableItem::OnCompHit);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("WeaponMesh is NULL in %s"), *GetName());
+	}
 	CharacterRef = Cast<AMainCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(),0));
 	
 

@@ -33,6 +33,9 @@ class	UMainWidget* MainWidget;
 
 void PlayerReadingNote(UUserWidget* mywidget);
 void PlayerStopReading(UUserWidget* widget);
+void HideInventory();
+void ShowInventory();
+
 
 void UpdateHealth(float value);
 void UpdateStamina(float value);

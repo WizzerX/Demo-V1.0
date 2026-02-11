@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Item/Interactable/PickupableItem.h"
+#include "Item/Weapon/WeaponType.h"
 #include "BaseWeapon.generated.h"
 /**
  * 
@@ -41,6 +42,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float RecoverSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		UAnimMontage* AttackAnimation;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	//	USoundBase* AttackSound;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	///USkeletalMeshComponent* WeaponMesh;
+
 public:
 	UPROPERTY(VisibleAnyWhere,BlueprintReadOnly)
 	bool bActiveRecoil = false;
@@ -48,9 +58,35 @@ public:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly)
 	bool bRecoverRecoil = false;
 
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite)
+	FName MuzzleName;
+
+	void PlayAttackMontage();
+
 public:
-	virtual void FireTheWeapon();
+	virtual void FireTheWeapon() {};
 	
+	virtual  void StartFire() {};
+	virtual void StopFire() {};
+
+
+
+	bool bAutomatic = false;
+
+
+
+	//UPROPERTY(EditAnyWhere,BlueprintReadWrite,Category="WeaponType")
+	//EItemType ItemType=EItemType::None;
+
+	UPROPERTY(EditAnyWhere)
+		UAnimMontage* FireAnimation;
+
+
+
+FORCEINLINE EItemType GetItemType(){ return ItemType; }
+FORCEINLINE USkeletalMeshComponent* GetWeaponMesh() { return WeaponMesh; }
+
 
 
 };

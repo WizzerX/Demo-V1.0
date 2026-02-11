@@ -66,7 +66,7 @@ void UInventoryComponent::AddItem(const FInventoryItemData& Item)
 					return;
 				}
 			}
-				if (slot.Num()<4)
+				if (slot.Num()<6)
 				{
 					
 					
@@ -86,6 +86,48 @@ void UInventoryComponent::AddItem(const FInventoryItemData& Item)
 
 	
 }
+int32 UInventoryComponent::FindIndexById(FGuid ID)
+{
+	for (int32 index = 0; index < slot.Num(); index++)
+	{
+		if (slot[index].IdCode == ID)
+		{
+			
+			UE_LOG(LogTemp, Error, TEXT("Finded ID IS: %s"),*slot[index].IdCode.ToString());
+			return index;
+			
+			
+		}
+
+	}
+	
+
+	UE_LOG(LogTemp, Error, TEXT("FindIndexById :-1"));
+	return -1;
+}
+
+void UInventoryComponent::RemoveItemAt(int32 RemovingIndex)
+{
+
+	if (!slot.IsValidIndex(RemovingIndex))
+	{
+	
+		return;
+	}
+
+	slot[RemovingIndex].Quantity--;
+
+	SlotWidgetDelegate.Broadcast(RemovingIndex, slot[RemovingIndex]);
+
+	if (slot[RemovingIndex].Quantity <= 0)
+	{
+		//slot[RemovingIndex].IdCode = FGuid::NewGuid();
+		slot[RemovingIndex] = FInventoryItemData();
+		SlotWidgetDelegate.Broadcast(RemovingIndex, FInventoryItemData());
+	}
+	
+
+}
 
 void UInventoryComponent::RemoveItem(const FInventoryItemData& Item)
 {
@@ -94,6 +136,7 @@ void UInventoryComponent::RemoveItem(const FInventoryItemData& Item)
 
 		if (slot[index].IdCode == Item.IdCode)
 		{
+			
 			slot[index].Quantity--;
 
 			SlotWidgetDelegate.Broadcast(index, slot[index]);
@@ -107,7 +150,9 @@ void UInventoryComponent::RemoveItem(const FInventoryItemData& Item)
 
 		}
 
+
 	}
+	
 
 }
 
@@ -154,6 +199,15 @@ FInventoryItemData UInventoryComponent::GetItemAt( const int32 index)
 			  
 	}
 
+}
+
+bool UInventoryComponent::IsValidIndex(const int32 index) const
+{
+
+	return slot.IsValidIndex(index);
+
+
+	
 }
 
 

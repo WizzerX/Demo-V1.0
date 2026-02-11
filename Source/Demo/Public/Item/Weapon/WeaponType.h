@@ -4,10 +4,14 @@
 #include "WeaponType.generated.h"
 
 UENUM(BlueprintType)
-enum class EWeaponType : uint8
+enum class EItemType : uint8
 {
     None        UMETA(DisplayName = "None"),
     Pistol      UMETA(DisplayName = "Pistol"),
     Rifle       UMETA(DisplayName = "Rifle"),
-    Shotgun     UMETA(DisplayName = "Shotgun")
+    Shotgun     UMETA(DisplayName = "Shotgun"),
+    Lighter  UMETA(DisplayName = "Lighter"),
+    Axe   UMETA(DisplayName = "Axe"),
+    Molotov UMETA(DisplayName="Molotov")
 };
+

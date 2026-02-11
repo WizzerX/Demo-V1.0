@@ -12,7 +12,7 @@ ATheGameMode::ATheGameMode()
 		DefaultPawnClass = AMainCharacter::StaticClass();        // your character
 		PlayerControllerClass = AMainCharacterController::StaticClass(); // your controller
 		                 
-	
+		
 
 
 

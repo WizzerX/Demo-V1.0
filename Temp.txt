@@ -1,1 +1,30 @@
-﻿
+﻿✅ Step 1 — Go to the correct UBT folder
+
+In Unreal Engine 4.27 (source build) the correct path is:
+
+D:\vodeo\UE_4.27\Engine\Binaries\DotNET\UnrealBuildTool\
+
+
+So open PowerShell or CMD and run:
+
+cd "D:\vodeo\UE_4.27\Engine\Binaries\DotNET\UnrealBuildTool"
+
+✅ Step 2 — Run UBT using full path
+
+You have 2 safe options:
+
+OPTION 1 — Run EXE by name (recommended)
+
+Only works after you cd into the folder:
+
+.\UnrealBuildTool.exe -projectfiles -project="C:\Demo-V1.0\Demo.uproject" -game -engine -progress
+
+
+Notice the *.*
+PowerShell requires it to run local EXEs.
+
+OPTION 2 — Run using absolute path
+
+Works from ANY folder:
+
+"D:\vodeo\UE_4.27\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe" -projectfiles -project="C:\Demo-V1.0\Demo.uproject" -ga

@@ -40,7 +40,7 @@ public:
 	class USceneComponent* SceneComponent;
 
 
-	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly)
+	UPROPERTY(EditAnyWhere,BlueprintReadWrite)
 	EItemCategory ItemCategory;
 
 	bool CheckWeapon(EItemCategory ItemCategory);
@@ -49,6 +49,10 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadwrite, Category = "collision", meta = (AllowPrivateAccess = true))
 	class UStaticMeshComponent* BoxMesh;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "collision", meta = (AllowPrivateAccess = true))
+		USkeletalMeshComponent* WeaponMesh;
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadwrite, category = "collision", meta = (AllowPrivateAccess = true))
@@ -101,6 +105,7 @@ public:
 
 	FORCEINLINE  UWidgetComponent* GetWidgetComponent() { return WidgetComponent; }
 	FORCEINLINE UStaticMeshComponent* GetMesh() { return BoxMesh; }
+	FORCEINLINE USkeletalMeshComponent* GetSkeletalMesh() { return WeaponMesh; }
 
 	FORCEINLINE USphereComponent* GetSphere() { return SphereComponent; }
 	FORCEINLINE UBoxComponent* GetBox() { return BoxComponent; }

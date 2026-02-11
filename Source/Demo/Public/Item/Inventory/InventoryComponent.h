@@ -43,13 +43,19 @@ public:
 		ThisTickFunction) override;
 	FInventoryItemData GetItemAt( const int32 index);
 
+	bool IsValidIndex(const int32 index)const;
+
 	const int32 GetIndex() { return  Index; }
 	
 	UInventoryComponent();
 
 	void AddItem( const FInventoryItemData& Item);
 
+	void RemoveItemAt(int32 RemovingIndex);
+
 	void RemoveItem(const FInventoryItemData& Item);
+
+	int32 FindIndexById(FGuid ID);
 	
 	UPROPERTY(BlueprintAssignable)
 	FSlotWidgetDelegate SlotWidgetDelegate;
@@ -63,7 +69,7 @@ public:
 	int32 NewIndex;
 
 private:
-	int SlotLeft = 4;
+	int SlotLeft = 6;
 
 
 

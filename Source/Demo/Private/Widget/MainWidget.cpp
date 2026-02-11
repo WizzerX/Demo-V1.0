@@ -22,7 +22,7 @@ void UMainWidget::UpdateHealthUI(float value)
 {
 	HealthBar->SetPercent(value);
 
-
+	
 
 }
 

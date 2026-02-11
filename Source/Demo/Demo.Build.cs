@@ -10,6 +10,7 @@ public class Demo : ModuleRules
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay" ,"UMG","AIModule","GameplayTasks","Niagara"});
 
-        PrivateDependencyModuleNames.AddRange(new string[] {  });
+        PrivateDependencyModuleNames.AddRange(new string[] {"Slate",
+	"SlateCore"  });
     }
 }

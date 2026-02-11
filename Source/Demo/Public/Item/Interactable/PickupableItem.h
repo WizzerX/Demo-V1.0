@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseInteractable.h"
+#include "Item/Weapon/WeaponType.h"
 #include "PickupableItem.generated.h"
 
 
@@ -24,6 +25,7 @@ public:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
 	int	Quantity;
 
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
 	FGuid IdCode;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
@@ -32,6 +34,8 @@ public:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
 	bool stackable = false;
 
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite)
+	FName SocketName = "";
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Item")
 	TSubclassOf<APickupableItem>ItemActorClass;
@@ -41,6 +45,8 @@ public:
 		Quantity(0),
 		Icon(nullptr)
 	{}
+
+
 
 };
 
@@ -73,6 +79,13 @@ public:
 	void SetItemState(EItemState state);
 	virtual bool IsPickable()const { return true; }
 
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite)
+	FName SlotName;
+
+
+
+
+
 protected:
 	
 
@@ -83,16 +96,15 @@ protected:
 	
 
 
-	void SetItemProperties(EItemState State);
+
+virtual	void SetItemProperties(EItemState State);
 
 	virtual void BeginPlay() override;
 	
 	class AMainCharacter* CharacterRef;
 
 private:
-	UFUNCTION()
-	void OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-		FVector NormalImpulse, const FHitResult& Hit);
+
 
 	virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
@@ -100,7 +112,6 @@ private:
 
 	void OnSphereBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
 
 
 
@@ -113,8 +124,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	FInventoryItemData ItemData;
+	UFUNCTION()
+		virtual void OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+			FVector NormalImpulse, const FHitResult& Hit);
 
 
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "ItemType")
+		EItemType ItemType;
 
 
 };

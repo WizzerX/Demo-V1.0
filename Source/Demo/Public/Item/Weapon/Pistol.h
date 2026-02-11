@@ -22,9 +22,11 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnyWhere,BlueprintReadWrite)
-	USkeletalMeshComponent* WeaponMesh;
 
+
+	
+
+	EItemType WeaponType = EItemType::Pistol;
 
 private:
 	FRotator InitRot;

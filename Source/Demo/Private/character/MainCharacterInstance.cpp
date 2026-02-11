@@ -7,7 +7,6 @@
 #include "GameFramework/Pawn.h"
 
 
-
 void UMainCharacterInstance::NativeInitializeAnimation()
 {
 	
@@ -50,7 +49,8 @@ void UMainCharacterInstance::UpdateAnimationProperties(float DeltaTime)
 		{
 			bAccelerating = true;
 		}
-		else {
+		else
+		{
 			bAccelerating = false;
 		}
 

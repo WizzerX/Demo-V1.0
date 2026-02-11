@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
 #include "MainCharacter.h"
-//#include "Item/Weapon/WeaponType.h"
+#include "Item/Weapon/WeaponType.h"
 #include "MainCharacterInstance.generated.h"
 
 UENUM(BlueprintType)
@@ -39,8 +39,7 @@ public:
 
 
 private:
-	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly , Category = movemment, meta = (AllowPrivateAccess=true))
-	  AMainCharacter* MainCharacter;
+	
 
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category =movement,meta=(AllowPrivateAccess=true))
 	float speed=0.0;
@@ -61,6 +60,15 @@ private:
 	AnimationState AnimationState;
 
 
+	//UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = movement, meta = (AllowPrivateAccess = true))
+	//EWeaponType WeaponType;
 
+public:
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = movemment, meta = (AllowPrivateAccess = true))
+	AMainCharacter* MainCharacter;
+
+
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = movement, meta = (AllowPrivateAccess = true))
+		bool Aiming;
 
 };
